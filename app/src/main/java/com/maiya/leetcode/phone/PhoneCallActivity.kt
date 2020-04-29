@@ -3,19 +3,18 @@ package com.maiya.leetcode.phone
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.view.View
 import android.view.WindowManager
-import android.widget.MediaController
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.maiya.leetcode.R
 import com.maiya.leetcode.phone.manager.PhoneCallManager
 import com.maiya.leetcode.phone.manager.PhoneCallService
 import com.maiya.leetcode.phone.utils.ActivityStack
+import com.maiya.leetcode.phone.utils.CallType
 import com.maiya.leetcode.phone.utils.PhoneUtil
 import com.shuyu.gsyvideoplayer.GSYVideoManager
 import com.shuyu.gsyvideoplayer.model.VideoOptionModel
@@ -34,14 +33,12 @@ import java.util.*
 class PhoneCallActivity : AppCompatActivity(), View.OnClickListener {
     // 工具类 类型
     private lateinit var phoneCallManager: PhoneCallManager
-    private lateinit var callType: PhoneCallService.CallType
+    private lateinit var callType: CallType
 
     // 电话号码 事件
     private var phoneNumber: String? =null
     private var onGoingCallTimer: Timer? = null
     private var callingTime = 0
-
-    var mMediaController: MediaController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +53,7 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener {
         onGoingCallTimer = Timer()
         if (intent != null) {
             phoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER)
-            callType = intent.getSerializableExtra(Intent.EXTRA_MIME_TYPES) as PhoneCallService.CallType
+            callType = intent.getSerializableExtra(Intent.EXTRA_MIME_TYPES) as CallType
         }
     }
 
@@ -73,13 +70,13 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener {
         tv_phone_hang_up.setOnClickListener(this)
 
         // 打进的电话
-        if (callType === PhoneCallService.CallType.CALL_IN) {
+        if (callType === CallType.CALL_IN) {
             tv_call_number_label.text = "来电号码"
             tv_phone_pick_up.visibility = View.VISIBLE
-        } else if (callType === PhoneCallService.CallType.CALL_OUT) {
+        } else if (callType === CallType.CALL_OUT) {
             tv_call_number_label.text = "呼叫号码"
             tv_phone_pick_up.visibility = View.GONE
-            phoneCallManager!!.openSpeaker()
+            phoneCallManager.openSpeaker()
         }
         wakeUpAndUnlock()
         initMedia()

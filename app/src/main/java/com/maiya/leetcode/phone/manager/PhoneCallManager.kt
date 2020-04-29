@@ -19,7 +19,6 @@ class PhoneCallManager(context: Context) {
     /**
      * 接听电话
      */
-
     fun answer() {
         if (call != null) {
             call!!.answer(VideoProfile.STATE_AUDIO_ONLY)

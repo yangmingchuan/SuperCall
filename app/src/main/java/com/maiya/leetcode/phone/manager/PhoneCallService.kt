@@ -7,6 +7,7 @@ import android.telecom.InCallService
 import androidx.annotation.RequiresApi
 import com.maiya.leetcode.phone.PhoneCallActivity
 import com.maiya.leetcode.phone.utils.ActivityStack
+import com.maiya.leetcode.phone.utils.CallType
 
 /**
  * 监听电话通信状态的服务
@@ -17,6 +18,7 @@ import com.maiya.leetcode.phone.utils.ActivityStack
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 class PhoneCallService : InCallService() {
+
     private val callback: Call.Callback = object : Call.Callback() {
         override fun onStateChanged(call: Call, state: Int) {
             super.onStateChanged(call, state)
@@ -30,6 +32,9 @@ class PhoneCallService : InCallService() {
         }
     }
 
+    /**
+     * call加入 （呼入 /呼出）
+     */
     override fun onCallAdded(call: Call) {
         super.onCallAdded(call)
         call.registerCallback(callback)
@@ -51,17 +56,18 @@ class PhoneCallService : InCallService() {
         }
     }
 
+    /**
+     * 呼入/呼出取消
+     */
     override fun onCallRemoved(call: Call) {
         super.onCallRemoved(call)
         call.unregisterCallback(callback)
         PhoneCallManager.call = null
+        var activityStack = ActivityStack.instance
+        //呼入取消 移除界面
+        if(activityStack.topActivity!!.packageName!!.contentEquals("PhoneCallActivity")){
+            activityStack.finishTopActivity()
+        }
     }
 
-
-    /**
-     * 呼叫状态
-     */
-    enum class CallType {
-        CALL_IN, CALL_OUT
-    }
 }

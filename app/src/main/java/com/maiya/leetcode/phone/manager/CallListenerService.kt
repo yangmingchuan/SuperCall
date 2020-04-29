@@ -14,7 +14,6 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.maiya.leetcode.R
-import com.maiya.leetcode.phone.PhoneActivity
 import com.maiya.leetcode.phone.PhoneCallActivity
 import com.maiya.leetcode.phone.receiver.AutoStartReceiver
 import com.maiya.leetcode.phone.utils.PhoneUtil

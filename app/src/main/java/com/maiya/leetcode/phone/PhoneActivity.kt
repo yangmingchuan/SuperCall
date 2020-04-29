@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.telecom.TelecomManager
-import android.view.View
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -17,11 +16,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.maiya.leetcode.R
 import com.maiya.leetcode.phone.manager.CallListenerService
-import com.maiya.leetcode.phone.manager.PhoneCallService
+import com.maiya.leetcode.phone.utils.ActivityStack
+import com.maiya.leetcode.phone.utils.CallType
 import com.yanzhenjie.permission.AndPermission
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_phone.*
-import kotlinx.android.synthetic.main.activity_phone.bt
 
 /**
  * 电话相关功能主页
@@ -36,6 +34,7 @@ class PhoneActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_phone)
+        ActivityStack.instance.addActivity(this)
         requestPermission()
         initView()
     }
@@ -70,7 +69,8 @@ class PhoneActivity : AppCompatActivity() {
                     intent.putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME,
                             packageName)
                     startActivity(intent)
-                } else { // 取消时跳转到默认设置页面
+                } else {
+                    // 取消时跳转到默认设置页面
                     startActivity(Intent("android.settings.MANAGE_DEFAULT_APPS_SETTINGS"))
                 }
             } else {
@@ -78,10 +78,11 @@ class PhoneActivity : AppCompatActivity() {
                 switch_default_phone_call.isChecked = false
             }
         }
+        //测试跳转到 呼叫等待界面
         bt.setOnClickListener{
             val intent = Intent(applicationContext, PhoneCallActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, PhoneCallService.CallType.CALL_IN)
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, CallType.CALL_IN)
             intent.putExtra(Intent.EXTRA_PHONE_NUMBER, "18768880074")
             startActivity(intent)
         }
@@ -93,7 +94,7 @@ class PhoneActivity : AppCompatActivity() {
     private fun askOverlay(){
         val alertDialog = AlertDialog.Builder(this)
                 .setTitle("允许显示悬浮框")
-                .setMessage("为了使电话监听服务正常工作，请允许这项权限")
+                .setMessage("为了使电话监听服务正常工作，请允许这项权限！")
                 .setPositiveButton("去设置") { dialog, _ ->
                     dialog.dismiss()
                     openSettings()
