@@ -24,6 +24,7 @@ class PhoneCallService : InCallService() {
             super.onStateChanged(call, state)
             when (state) {
                 Call.STATE_ACTIVE -> {
+
                 }
                 Call.STATE_DISCONNECTED -> {
                     ActivityStack().finishActivity(PhoneCallActivity::class.java)

@@ -13,9 +13,11 @@ import android.view.*
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.maiya.leetcode.R
 import com.maiya.leetcode.phone.PhoneCallActivity
 import com.maiya.leetcode.phone.receiver.AutoStartReceiver
+import com.maiya.leetcode.phone.utils.ActivityStack
 import com.maiya.leetcode.phone.utils.PhoneUtil
 
 /**
@@ -51,13 +53,19 @@ class CallListenerService : Service() {
                 super.onCallStateChanged(state, incomingNumber)
                 callNumber = incomingNumber
                 when (state) {
-                    TelephonyManager.CALL_STATE_IDLE -> dismiss()
+                    TelephonyManager.CALL_STATE_IDLE -> {
+                        Toast.makeText(applicationContext,"通话空闲",Toast.LENGTH_SHORT).show()
+                        ActivityStack().finishActivity(PhoneCallActivity::class.java)
+                        dismiss()
+                    }
                     TelephonyManager.CALL_STATE_RINGING -> {
                         isCallingIn = true
+                        Toast.makeText(applicationContext,"摘机状态，接听或者拨打",Toast.LENGTH_SHORT).show()
                         //updateUI()
                         //show()
                     }
                     TelephonyManager.CALL_STATE_OFFHOOK -> {
+                        Toast.makeText(applicationContext,"响铃:来电号码:" + incomingNumber,Toast.LENGTH_SHORT).show()
                         //updateUI()
                         //show()
                     }

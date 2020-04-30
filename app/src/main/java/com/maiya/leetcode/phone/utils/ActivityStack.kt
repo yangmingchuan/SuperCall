@@ -8,8 +8,6 @@ import java.util.*
  * @author ymc
  */
 class ActivityStack {
-    private val activities: MutableList<Activity> = ArrayList()
-
     fun addActivity(activity: Activity) {
         activities.add(activity)
     }
@@ -51,5 +49,6 @@ class ActivityStack {
 
     companion object {
         val instance = ActivityStack()
+        private val activities: MutableList<Activity> = ArrayList()
     }
 }

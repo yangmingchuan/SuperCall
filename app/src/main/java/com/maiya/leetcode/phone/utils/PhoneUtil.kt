@@ -1,6 +1,9 @@
 package com.maiya.leetcode.phone.utils
 
+import android.app.ActivityManager
+import android.content.Context
 import android.text.TextUtils
+import com.maiya.leetcode.phone.manager.CallListenerService
 
 /**
  * Author : ymc
@@ -9,6 +12,9 @@ import android.text.TextUtils
  */
 
 object PhoneUtil {
+
+
+
 
     /**
      * 格式化电话号码
@@ -27,5 +33,18 @@ object PhoneUtil {
         return (if (minute < 10) "0$minute" else minute).toString() +
                 ":" +
                 if (second < 10) "0$second" else second
+    }
+
+    /**
+     * 判断service 是否启动
+     */
+    fun isServiceRunning(serviceClass: Class<CallListenerService>,context: Context): Boolean {
+        val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager ?: return false
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
     }
 }
