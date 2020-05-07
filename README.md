@@ -4,4 +4,4 @@
 
 ## 效果图
 
-[!效果图](https://github.com/yangmingchuan/LeetCode/tree/master/app/img/tel.jpg)
+![效果图](https://github.com/yangmingchuan/LeetCode/tree/master/app/img/tel.jpg)

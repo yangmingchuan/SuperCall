@@ -1,94 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_user_info"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".phone.PhoneCallActivity">
 
-    <RelativeLayout
-        android:id="@+id/rl_user_info"
+    <com.maiya.leetcode.phone.ui.EmptyControlVideo
+        android:id="@+id/videoPlayer"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@color/colorPrimaryDark">
+        android:layout_height="match_parent" />
 
-        <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
-            android:id="@+id/videoPlayer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer>
+    <TextView
+        android:id="@+id/tv_call_number_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_call_number"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/white"
+        android:text="来电号码"
+        android:textSize="18sp" />
 
-    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_call_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        tools:text="133-9527-9527" />
+
+    <TextView
+        android:id="@+id/tv_phone_calling_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="通话中：01:33"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
 
         <TextView
-            android:id="@+id/tv_call_number_label"
+            android:id="@+id/tv_phone_hang_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/tv_call_number"
-            android:layout_centerHorizontal="true"
-            android:text="来电号码"
-            android:textSize="18sp" />
-
-
-        <TextView
-            android:id="@+id/tv_call_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textSize="20sp"
-            tools:text="133-9527-9527" />
+            android:drawableTop="@drawable/ic_phone_hang_up"
+            android:drawablePadding="16dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="挂  断"
+            android:textColor="@android:color/white"
+            tools:visibility="visible" />
 
         <TextView
-            android:id="@+id/tv_phone_calling_time"
+            android:id="@+id/tv_phone_pick_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="24dp"
-            android:textSize="16sp"
-            android:text="通话中：01:33"
+            android:layout_marginLeft="100dp"
+            android:layout_toRightOf="@id/tv_phone_hang_up"
+            android:drawableTop="@drawable/ic_phone_pick_up"
+            android:drawablePadding="16dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="接  听"
+            android:textColor="@android:color/white"
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <RelativeLayout
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tv_phone_hang_up"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="16dp"
-                android:drawableTop="@drawable/ic_phone_hang_up"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="挂  断"
-                android:textColor="@android:color/black"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/tv_phone_pick_up"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="100dp"
-                android:layout_toRightOf="@id/tv_phone_hang_up"
-                android:drawablePadding="16dp"
-                android:drawableTop="@drawable/ic_phone_pick_up"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="接  听"
-                android:textColor="@android:color/black"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </RelativeLayout>
-
     </RelativeLayout>
-</LinearLayout>
+
+
+</RelativeLayout>

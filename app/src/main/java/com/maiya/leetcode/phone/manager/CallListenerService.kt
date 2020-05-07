@@ -47,6 +47,10 @@ class CallListenerService : Service() {
         initPhoneCallView()
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return START_STICKY
+    }
+
     private fun initPhoneStateListener() {
         phoneStateListener = object : PhoneStateListener() {
             override fun onCallStateChanged(state: Int, incomingNumber: String) {
@@ -60,12 +64,12 @@ class CallListenerService : Service() {
                     }
                     TelephonyManager.CALL_STATE_RINGING -> {
                         isCallingIn = true
-                        Toast.makeText(applicationContext,"摘机状态，接听或者拨打",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext,"摘机状态，接听或者拨打"+ incomingNumber,Toast.LENGTH_SHORT).show()
                         //updateUI()
                         //show()
                     }
                     TelephonyManager.CALL_STATE_OFFHOOK -> {
-                        Toast.makeText(applicationContext,"响铃:来电号码:" + incomingNumber,Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext,"响铃:来电号码:"+ incomingNumber ,Toast.LENGTH_SHORT).show()
                         //updateUI()
                         //show()
                     }

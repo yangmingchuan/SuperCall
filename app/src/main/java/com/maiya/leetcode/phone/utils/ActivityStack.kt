@@ -23,7 +23,7 @@ class ActivityStack {
         }
     }
 
-    private fun finishActivity(activity: Activity?) {
+    fun finishActivity(activity: Activity?) {
         if (activity != null) {
             activities.remove(activity)
             activity.finish()

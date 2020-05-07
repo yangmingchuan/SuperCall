@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.DEVICE_POWER"/>
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
@@ -56,7 +57,9 @@
         <activity android:name=".MainActivity" />
 
         <activity android:name=".phone.PhoneCallActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait">
+
             <!-- region provides ongoing call UI -->
             <intent-filter>
                 <action android:name="android.intent.action.DIAL" />
@@ -83,7 +86,7 @@
             <meta-data
                 android:name="android.telecom.IN_CALL_SERVICE_UI"
                 android:value="true" />
-            <intent-filter>
+            <intent-filter android:priority="1000">
                 <action android:name="android.telecom.InCallService" />
             </intent-filter>
         </service>
