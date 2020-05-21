@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.IBinder
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.FrameLayout
@@ -52,23 +53,27 @@ class CallListenerService : Service() {
     }
 
     private fun initPhoneStateListener() {
+        Log.e("ymc","电话状态监听Service 初始化")
         phoneStateListener = object : PhoneStateListener() {
             override fun onCallStateChanged(state: Int, incomingNumber: String) {
                 super.onCallStateChanged(state, incomingNumber)
                 callNumber = incomingNumber
                 when (state) {
                     TelephonyManager.CALL_STATE_IDLE -> {
+                        Log.e("ymc","电话状态监听Service--通话空闲")
                         Toast.makeText(applicationContext,"通话空闲",Toast.LENGTH_SHORT).show()
-                        ActivityStack().finishActivity(PhoneCallActivity::class.java)
-                        dismiss()
+//                        ActivityStack().finishActivity(PhoneCallActivity::class.java)
+//                        dismiss()
                     }
                     TelephonyManager.CALL_STATE_RINGING -> {
                         isCallingIn = true
+                        Log.e("ymc","电话状态监听Service--call 呼入/呼出")
                         Toast.makeText(applicationContext,"摘机状态，接听或者拨打"+ incomingNumber,Toast.LENGTH_SHORT).show()
                         //updateUI()
                         //show()
                     }
                     TelephonyManager.CALL_STATE_OFFHOOK -> {
+                        Log.e("ymc","电话状态监听Service--call 呼入/呼出")
                         Toast.makeText(applicationContext,"响铃:来电号码:"+ incomingNumber ,Toast.LENGTH_SHORT).show()
                         //updateUI()
                         //show()

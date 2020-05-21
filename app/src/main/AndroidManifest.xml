@@ -86,6 +86,12 @@
             <meta-data
                 android:name="android.telecom.IN_CALL_SERVICE_UI"
                 android:value="true" />
+            <meta-data
+                android:name="android.telecom.IN_CALL_SERVICE_RINGING"
+                android:value="false"/>
+            <meta-data
+                android:name="android.telecom.INCLUDE_EXTERNAL_CALLS"
+                android:value="true"/>
             <intent-filter android:priority="1000">
                 <action android:name="android.telecom.InCallService" />
             </intent-filter>

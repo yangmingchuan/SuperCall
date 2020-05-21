@@ -13,16 +13,11 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.maiya.leetcode.R
 import com.maiya.leetcode.phone.manager.PhoneCallManager
-import com.maiya.leetcode.phone.manager.PhoneCallService
 import com.maiya.leetcode.phone.ui.EmptyControlVideo
 import com.maiya.leetcode.phone.utils.ActivityStack
 import com.maiya.leetcode.phone.utils.CallType
 import com.maiya.leetcode.phone.utils.PhoneUtil
-import com.shuyu.gsyvideoplayer.GSYVideoManager
-import com.shuyu.gsyvideoplayer.model.VideoOptionModel
-import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
 import kotlinx.android.synthetic.main.activity_phone_call.*
-import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
 
 

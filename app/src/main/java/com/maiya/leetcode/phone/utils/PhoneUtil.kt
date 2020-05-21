@@ -13,9 +13,6 @@ import com.maiya.leetcode.phone.manager.CallListenerService
 
 object PhoneUtil {
 
-
-
-
     /**
      * 格式化电话号码
      */
