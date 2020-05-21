@@ -12,6 +12,7 @@ import com.maiya.leetcode.phone.utils.CallType
 
 /**
  * 监听电话通信状态的服务
+ * TODO 华为手机 启动不起来 InCallService
  * Author : ymc
  * Date   : 2020/4/29  14:38
  */

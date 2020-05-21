@@ -101,7 +101,7 @@
             android:enabled="true"
             android:exported="false">
             <intent-filter android:priority="1000">
-                <action android:name=".service.CallShowService" />
+                <action android:name=".phone.manager.CallListenerService" />
             </intent-filter>
         </service>
 
