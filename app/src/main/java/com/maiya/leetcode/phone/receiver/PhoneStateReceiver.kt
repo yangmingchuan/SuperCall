@@ -11,6 +11,8 @@ import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.KeyEvent
 import com.android.internal.telephony.ITelephony
+import com.maiya.leetcode.phone.manager.CallListenerService
+import com.maiya.leetcode.phone.manager.PhoneCallService
 import java.io.IOException
 import java.lang.reflect.Method
 
@@ -31,8 +33,8 @@ class PhoneStateReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        //context!!.startService(Intent(context, PhoneCallService::class.java))
-        //context!!.startService(Intent(context, CallListenerService::class.java))
+        context!!.startService(Intent(context, PhoneCallService::class.java))
+        context!!.startService(Intent(context, CallListenerService::class.java))
 
         var tm = context!!.getSystemService(Service.TELEPHONY_SERVICE) as TelephonyManager
 

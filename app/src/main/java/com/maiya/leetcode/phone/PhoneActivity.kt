@@ -44,6 +44,14 @@ class PhoneActivity : AppCompatActivity() {
     }
 
     private fun initPerssmon() {
+        //跳转到设置界面
+        bt1.setOnClickListener{
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.data = Uri.parse("package:$packageName")
+            startActivity(intent)
+        }
+        //打开系统设置权限
         bt2.setOnClickListener{
             if (!Settings.System.canWrite(applicationContext)) {
                 val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
@@ -52,12 +60,11 @@ class PhoneActivity : AppCompatActivity() {
             }else Toast.makeText(this,"已同意修改默认系统设置",Toast.LENGTH_SHORT).show()
         }
 
-        bt1.setOnClickListener{
-            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.data = Uri.parse("package:$packageName")
-            startActivity(intent)
+
+        bt3.setOnClickListener{
+
         }
+
 
     }
 
@@ -169,8 +176,8 @@ class PhoneActivity : AppCompatActivity() {
      */
     private fun requestPermission() {
         AndPermission.with(this)
-                .permission(Manifest.permission.CALL_PHONE,Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_FINE_LOCATION,
+                .permission(Manifest.permission.CALL_PHONE,Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_CALL_LOG,
+                        Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.WRITE_CALL_LOG,
                         Manifest.permission.WAKE_LOCK,Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_EXTERNAL_STORAGE
                 )
                 .onGranted {
