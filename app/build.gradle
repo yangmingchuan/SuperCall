@@ -62,6 +62,12 @@ dependencies {
 
     //Gson
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    //谷歌电话号码归属地库
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.10.3'
+    implementation 'com.googlecode.libphonenumber:carrier:1.99'
+    implementation 'com.googlecode.libphonenumber:geocoder:2.99'
+    implementation 'com.googlecode.libphonenumber:prefixmapper:2.109'
 }
 repositories {
     mavenCentral()

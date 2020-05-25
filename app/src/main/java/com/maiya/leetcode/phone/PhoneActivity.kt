@@ -62,7 +62,8 @@ class PhoneActivity : AppCompatActivity() {
 
 
         bt3.setOnClickListener{
-
+            val intent = Intent(this,PhoneListActivity::class.java)
+            startActivity(intent)
         }
 
 
@@ -184,10 +185,11 @@ class PhoneActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext,"权限同意", Toast.LENGTH_SHORT).show()
                 }.onDenied{
                     if (AndPermission.hasAlwaysDeniedPermission(applicationContext,it)){
-                        AndPermission.permissionSetting(applicationContext).execute();
+                        //AndPermission.permissionSetting(applicationContext).execute();
                     }
                     Toast.makeText(applicationContext,"权限拒绝", Toast.LENGTH_SHORT).show()
                 }.start()
+
     }
 
 
