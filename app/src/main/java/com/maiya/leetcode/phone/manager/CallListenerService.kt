@@ -15,10 +15,17 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.maiya.leetcode.R
 import com.maiya.leetcode.phone.PhoneCallActivity
+import com.maiya.leetcode.phone.impl.PhoneStateActionImpl
+import com.maiya.leetcode.phone.impl.PhoneStateListenerImpl
 import com.maiya.leetcode.phone.receiver.AutoStartReceiver
+import com.maiya.leetcode.phone.service.CustomNotifyManager
+import com.maiya.leetcode.phone.service.TaskServiceBinder
 import com.maiya.leetcode.phone.utils.ActivityStack
+import com.maiya.leetcode.phone.utils.CacheUtils
+import com.maiya.leetcode.phone.utils.PhoneCallUtil
 import com.maiya.leetcode.phone.utils.PhoneUtil
 
 /**
@@ -27,153 +34,87 @@ import com.maiya.leetcode.phone.utils.PhoneUtil
  * Date   : 2020/4/29  13:55
  * Class  : CallListenerService
  */
+
 class CallListenerService : Service() {
-    // 相关view
-    private lateinit var phoneCallView: View
-    private lateinit var tvCallNumber: TextView
-    private lateinit var btnOpenApp: TextView
-    //
-    private lateinit var windowManager: WindowManager
-    private lateinit var params: WindowManager.LayoutParams
+
+    companion object {
+        const val KEY_STATE = "key_state"
+        const val KEY_PHONE = "key_phone"
+
+        const val PHONE_CALL_ANSWER = "phone_call_answer"
+        const val PHONE_CALL_DISCONNECT = "phone_call_disconnect"
+
+        const val ACTION_PHONE_STATE = "action_phone_state"  //电话状态监听处理
+        const val ACTION_PHONE_CALL = "action_phone_call"    //电话操作处理（接听、挂断等）
+
+    }
+
+
     private lateinit var phoneStateListener: PhoneStateListener
     private lateinit var telephonyManager: TelephonyManager
-    private lateinit var callNumber: String
-    // 电话状态判断
-    private var hasShown = false
-    private var isCallingIn = false
+
+    private var callState: Int? = -1
+    private var phoneNumber: String? = null
+    private val callServiceBinder: TaskServiceBinder = TaskServiceBinder()
 
     override fun onCreate() {
         super.onCreate()
+        forceForeground("","")
         initPhoneStateListener()
-        initPhoneCallView()
+    }
+
+    fun forceForeground(content: String, btn: String) {
+        try {
+            val intent = Intent(this, CallListenerService::class.java)
+            ContextCompat.startForegroundService(this, intent)
+            val notification = CustomNotifyManager.getInstance().getStepNotifyNotification(this, content, btn)
+            startForeground(CustomNotifyManager.STEP_COUNT_NOTIFY_ID, notification)
+            Log.e("ymc", "CallListenerService   forceForeground ")
+        } catch (e: Exception) {
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent == null) {
+            return START_STICKY
+        }
+        val action = intent.action ?: return START_STICKY
+        when (action) {
+            ACTION_PHONE_STATE -> {
+                callState = intent.getIntExtra(KEY_STATE, -1)
+                phoneNumber = intent.getStringExtra(KEY_PHONE)
+                dealWithCallAction(callState!!, phoneNumber)
+            }
+            ACTION_PHONE_CALL -> {
+                dispatchAction(intent)
+            }
+        }
         return START_STICKY
     }
 
-    private fun initPhoneStateListener() {
-        Log.e("ymc","电话状态监听Service 初始化")
-        phoneStateListener = object : PhoneStateListener() {
-            override fun onCallStateChanged(state: Int, incomingNumber: String) {
-                super.onCallStateChanged(state, incomingNumber)
-                callNumber = incomingNumber
-                when (state) {
-                    TelephonyManager.CALL_STATE_IDLE -> {
-                        Log.e("ymc","电话状态监听Service--通话空闲")
-                        Toast.makeText(applicationContext,"通话空闲",Toast.LENGTH_SHORT).show()
-//                        ActivityStack().finishActivity(PhoneCallActivity::class.java)
-//                        dismiss()
-                    }
-                    TelephonyManager.CALL_STATE_RINGING -> {
-                        isCallingIn = true
-                        Log.e("ymc","电话状态监听Service--call 呼入/呼出")
-                        Toast.makeText(applicationContext,"摘机状态，接听或者拨打"+ incomingNumber,Toast.LENGTH_SHORT).show()
-                        //updateUI()
-                        //show()
-                    }
-                    TelephonyManager.CALL_STATE_OFFHOOK -> {
-                        Log.e("ymc","电话状态监听Service--call 呼入/呼出")
-                        Toast.makeText(applicationContext,"响铃:来电号码:"+ incomingNumber ,Toast.LENGTH_SHORT).show()
-                        //updateUI()
-                        //show()
-                    }
-                    else -> {
-                    }
-                }
-            }
+    private fun dispatchAction(intent: Intent) {
+        if (intent.hasExtra(PHONE_CALL_DISCONNECT)) {
+            PhoneCallUtil.disconnect()
+            return
         }
+        if (intent.hasExtra(PHONE_CALL_ANSWER)) {
+            PhoneCallUtil.answer()
+        }
+
+    }
+
+    private fun initPhoneStateListener() {
+        Log.e("ringTong", "电话监听初始化")
+        phoneStateListener = PhoneStateListenerImpl(applicationContext)
         // 设置来电监听器
         telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE)
-
     }
-
-    /**
-     * 显示顶级弹框展示通话信息
-     */
-    private fun show() {
-        if (!hasShown) {
-            windowManager.addView(phoneCallView, params)
-            hasShown = true
-        }
-    }
-
-    /**
-     * 取消显示
-     */
-    private fun dismiss() {
-        if (hasShown) {
-            windowManager.removeView(phoneCallView)
-            isCallingIn = false
-            hasShown = false
-        }
-    }
-
-    private fun initPhoneCallView() {
-        windowManager = applicationContext
-                .getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val width = windowManager.defaultDisplay.width
-
-        params = WindowManager.LayoutParams()
-        params.gravity = Gravity.CENTER_HORIZONTAL or Gravity.TOP
-        params.width = width
-        params.height = WindowManager.LayoutParams.WRAP_CONTENT
-        params.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-        // 设置图片格式，效果为背景透明
-        params.format = PixelFormat.TRANSLUCENT
-        // 设置 Window flag 为系统级弹框 | 覆盖表层
-        params.type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE
-        // 不可聚集（不响应返回键）| 全屏
-        params.flags = (WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                or WindowManager.LayoutParams.FLAG_FULLSCREEN
-                or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
-        // API 19 以上则还可以开启透明状态栏与导航栏
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            params.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    or WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
-                    or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    or WindowManager.LayoutParams.FLAG_FULLSCREEN
-                    or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
-        }
-        val interceptorLayout: FrameLayout = object : FrameLayout(this) {
-            override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-                if (event.action == KeyEvent.ACTION_DOWN) {
-                    if (event.keyCode == KeyEvent.KEYCODE_BACK) {
-                        return true
-                    }
-                }
-                return super.dispatchKeyEvent(event)
-            }
-        }
-
-        phoneCallView = (getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
-                .inflate(R.layout.view_phone_call, interceptorLayout)
-        tvCallNumber = phoneCallView.findViewById<TextView>(R.id.tv_call_number)
-        btnOpenApp = phoneCallView.findViewById<Button>(R.id.btn_open_app)
-        btnOpenApp.setOnClickListener {
-            dismiss()
-            val intent = Intent(applicationContext, PhoneCallActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            this@CallListenerService.startActivity(intent)
-        }
-    }
-
-    /**
-     * 更新UI
-     */
-    fun updateUI() {
-        tvCallNumber.text = PhoneUtil.formatPhoneNumber(callNumber)
-        val callTypeDrawable: Int = if (isCallingIn) R.drawable.ic_phone_call_in else R.drawable.ic_phone_call_out
-        tvCallNumber.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                resources.getDrawable(callTypeDrawable), null)
-    }
-
 
 
     override fun onBind(intent: Intent): IBinder? {
-        return null
+        callServiceBinder.onBind(this)
+        return callServiceBinder
     }
 
     override fun onDestroy() {
@@ -183,4 +124,24 @@ class CallListenerService : Service() {
         super.onDestroy()
     }
 
+    //来去电的几个状态
+    private fun dealWithCallAction(state: Int, phoneNumber: String?) {
+        if(CacheUtils.getString(CacheUtils.KEY_SET_RING_TYPE, "").equals(CacheUtils.getString(CacheUtils.TYPE_RING_VIDEO, ""))){
+            return
+        }
+        when (state) {
+            TelephonyManager.CALL_STATE_RINGING -> {
+                PhoneStateActionImpl.instance.onRinging(phoneNumber)
+            }
+            TelephonyManager.CALL_STATE_IDLE -> {
+                PhoneStateActionImpl.instance.onHandUp()
+            }
+            TelephonyManager.CALL_STATE_OFFHOOK -> {
+                PhoneStateActionImpl.instance.onPickUp(phoneNumber)
+            }
+            1000 -> {   //拨打电话广播状态
+                PhoneStateActionImpl.instance.onCallOut(phoneNumber)
+            }
+        }
+    }
 }

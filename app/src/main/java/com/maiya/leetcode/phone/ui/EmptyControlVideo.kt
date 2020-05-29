@@ -6,6 +6,8 @@ import com.maiya.leetcode.R
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
 
 /**
+ * 无操作 播放器
+ * 
  * Author : ymc
  * Date   : 2020/5/7  15:28
  * Class  : EmptyControlVideo

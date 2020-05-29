@@ -43,6 +43,7 @@
     <permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
 
     <application
+        android:name=".MApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -124,6 +125,16 @@
                 <action android:name="jenly.autostart_action" />
             </intent-filter>
         </receiver>
+
+        <!-- 通知使用权 android:process=":megatron" 导致不会弹出windows-->
+        <service
+            android:name=".phone.service.NotificationService"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

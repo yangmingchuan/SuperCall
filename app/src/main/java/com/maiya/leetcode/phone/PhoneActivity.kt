@@ -177,9 +177,11 @@ class PhoneActivity : AppCompatActivity() {
      */
     private fun requestPermission() {
         AndPermission.with(this)
-                .permission(Manifest.permission.CALL_PHONE,Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_CALL_LOG,
-                        Manifest.permission.READ_PHONE_STATE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.WRITE_CALL_LOG,
-                        Manifest.permission.WAKE_LOCK,Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_EXTERNAL_STORAGE
+                .permission(Manifest.permission.CALL_PHONE,Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.MODIFY_PHONE_STATE,Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.WRITE_CALL_LOG,Manifest.permission.WAKE_LOCK,
+                        Manifest.permission.READ_CONTACTS,Manifest.permission.WRITE_EXTERNAL_STORAGE
                 )
                 .onGranted {
                     Toast.makeText(applicationContext,"权限同意", Toast.LENGTH_SHORT).show()
