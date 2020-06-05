@@ -21,6 +21,8 @@ import java.lang.reflect.Method
 
 
 /**
+ * 电话操作工具类
+ *
  * Author : ymc
  * Date   : 2020/4/29  14:36
  * Class  : PhoneCallManager
@@ -74,6 +76,7 @@ object PhoneCallUtil {
         } catch (th: Throwable) {
         }
     }
+
 
     /**r
      * 断开电话，包括来电时的拒接以及接听后的挂断

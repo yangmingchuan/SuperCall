@@ -3,30 +3,18 @@ package com.maiya.leetcode.phone.manager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.graphics.PixelFormat
-import android.os.Build
 import android.os.IBinder
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
-import android.view.*
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.maiya.leetcode.R
-import com.maiya.leetcode.phone.PhoneCallActivity
 import com.maiya.leetcode.phone.impl.PhoneStateActionImpl
 import com.maiya.leetcode.phone.impl.PhoneStateListenerImpl
 import com.maiya.leetcode.phone.receiver.AutoStartReceiver
 import com.maiya.leetcode.phone.service.CustomNotifyManager
 import com.maiya.leetcode.phone.service.TaskServiceBinder
-import com.maiya.leetcode.phone.utils.ActivityStack
 import com.maiya.leetcode.phone.utils.CacheUtils
 import com.maiya.leetcode.phone.utils.PhoneCallUtil
-import com.maiya.leetcode.phone.utils.PhoneUtil
 
 /**
  * 电话监听

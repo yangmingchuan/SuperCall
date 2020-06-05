@@ -6,13 +6,10 @@ import android.telecom.Call
 import android.telecom.InCallService
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.maiya.leetcode.phone.PhoneCallActivity
-import com.maiya.leetcode.phone.utils.ActivityStack
 import com.maiya.leetcode.phone.utils.CallType
 
 /**
  * 监听电话通信状态的服务
- * TODO 华为手机 启动不起来 InCallService
  * Author : ymc
  * Date   : 2020/4/29  14:38
  */
@@ -25,10 +22,8 @@ class PhoneCallService : InCallService() {
             super.onStateChanged(call, state)
             when (state) {
                 Call.STATE_ACTIVE -> {
-
                 }
                 Call.STATE_DISCONNECTED -> {
-                    ActivityStack().finishActivity(PhoneCallActivity::class.java)
                 }
             }
         }

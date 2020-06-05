@@ -3,9 +3,7 @@ package com.maiya.leetcode.phone.manager
 import android.content.Context
 import com.maiya.leetcode.phone.impl.IPhoneCallListenerImpl
 import com.maiya.leetcode.phone.utils.CacheUtils
-import com.preface.megatron.tel.impl.IPhoneCallListenerImpl
-import com.preface.megatron.tel.view.FloatingWindow
-import com.qsmy.business.common.storage.sp.CacheUtils
+import com.maiya.leetcode.phone.view.FloatingWindow
 
 /**
  * 悬浮窗管理类

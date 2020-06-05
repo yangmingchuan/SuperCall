@@ -2,6 +2,7 @@ package com.maiya.leetcode
 
 import android.app.Application
 import android.content.Context
+import com.maiya.leetcode.phone.manager.CallerShowManager
 import com.maiya.leetcode.phone.utils.GlobalActivityLifecycleMonitor
 
 /**
@@ -33,6 +34,8 @@ class MApplication : Application() {
          * 生命周期监控
          */
         GlobalActivityLifecycleMonitor.register(this)
+        //初始化Call
+        CallerShowManager.instance.initCallerShow(this)
     }
 
 
