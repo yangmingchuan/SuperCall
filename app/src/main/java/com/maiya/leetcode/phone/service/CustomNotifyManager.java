@@ -2,6 +2,7 @@ package com.maiya.leetcode.phone.service;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -17,7 +18,7 @@ import androidx.core.app.NotificationCompat;
 import com.maiya.leetcode.MApplication;
 import com.maiya.leetcode.R;
 import com.maiya.leetcode.phone.receiver.NotificationBroadcast;
-import com.maiya.leetcode.phone.utils.CacheUtils;
+import com.maiya.leetcode.phone.utils.NotificationUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,31 +31,23 @@ import java.util.Properties;
 
 
 public class CustomNotifyManager {
-    // 小米系统相关参数，用于判断是否是小米系统
-    private static final String KEY_MIUI_VERSION_CODE = "ro.miui.ui.version.code";
-    private static final String KEY_MIUI_VERSION_NAME = "ro.miui.ui.version.name";
-    private static final String KEY_MIUI_INTERNAL_STORAGE = "ro.miui.internal.storage";
-
     private static final String[] BLOCK_PHONES = new String[]{"vivo Y31A", "vivo Y51", "vivo Y31"
             , "vivo Y51e", "vivo Y51A", "vivo Y51t L", "vivo Y51n"};//部分vivo手机不支持自定义样式
-
     private static final String NUBIA_Z11 = "NX549J";//单独屏蔽这个手机
+
     private static final String notifyName = "消息推送";
     private static final String notifyDescription = "通知栏";
     public static final int STEP_COUNT_NOTIFY_ID = 100;
-
     public static final String ACTION_NOTIFICATION_CLICK = "com.ACTION_NOTIFICATION_CLICK";
     private static final String CHANNEL_ID = "channel_megatron_1";
     private static final String CHANNEL_NAME = "荔枝铃声";
 
+    private static final String CHANNEL_CONTENT = "荔枝铃声正在派发大量金币！";
 
     private static NotificationManager manager;
     private static CustomNotifyManager instance;
 
-    private boolean isMIUI;
-
     private CustomNotifyManager() {
-        isMIUI = isMIUI();
     }
 
     public static synchronized CustomNotifyManager getInstance() {
@@ -84,42 +77,81 @@ public class CustomNotifyManager {
                     mChannel.setVibrationPattern(new long[]{0});
                     mChannel.setSound(null, null);
                 }
+                NotificationChannelGroup group = new NotificationChannelGroup("stick", "通知");
+                manager.createNotificationChannelGroup(group);
+                mChannel.setGroup("stick");
                 manager.createNotificationChannel(mChannel);
             }
         }
         return manager;
     }
 
-    /**
-     * 本地步数推送
-     */
-    public Notification getStepNotifyNotification(Context context, String content, String btn) {
-        getNotificationManager(context, false);
+    public Notification getNotifyNotification(Context context, String content, String btn) {
         Intent intent = new Intent(context, NotificationBroadcast.class);
         intent.setAction(ACTION_NOTIFICATION_CLICK);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
-        RemoteViews remoteViews = null;
-        if (notShieldPhone()) {
-            // 自定义布局
-            remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.layout_item_notification);
-            PendingIntent homeIntent = PendingIntent.getBroadcast(MApplication.Companion.getInstance().getContext(), 1,
-                    new Intent(ACTION_NOTIFICATION_CLICK), PendingIntent.FLAG_CANCEL_CURRENT);
-            if (!TextUtils.isEmpty(content)) {
-                remoteViews.setTextViewText(R.id.tv_content, content);
+        Notification notification = null;
+        NotificationCompat.Builder builder = getBuilder(context);
+        try {
+            getNotificationManager(context, false);
+            RemoteViews remoteViews = null;
+
+            if (notShieldPhone()) {
+                // 暂时用同样的布局
+                if (NotificationUtil.isDarkNotificationTheme(MApplication.Companion.getInstance())) {
+                    remoteViews = new RemoteViews(context.getPackageName(),
+                            R.layout.layout_item_notification);
+                } else {
+                    remoteViews = new RemoteViews(context.getPackageName(),
+                            R.layout.layout_item_notification);
+                }
+
+                if (!TextUtils.isEmpty(content)) {
+                    remoteViews.setTextViewText(R.id.tv_content, content);
+                }
+                if (!TextUtils.isEmpty(btn)) {
+                    remoteViews.setTextViewText(R.id.tv_task, btn);
+                }
             }
-            if (!TextUtils.isEmpty(btn)) {
-                remoteViews.setTextViewText(R.id.tv_task, btn);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (remoteViews != null) {
+                    builder.setCustomContentView(remoteViews);
+                }
+                notification = builder
+                        .setContentTitle(CHANNEL_NAME)
+                        .setContentText(CHANNEL_CONTENT)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setLargeIcon(null)
+                        .setContentIntent(pendingIntent)
+                        .setAutoCancel(true)
+                        .setLights(0, 0, 0)
+                        .setVibrate(new long[]{0})
+                        .setSound(null)
+                        .setDefaults(NotificationCompat.FLAG_ONLY_ALERT_ONCE)
+                        .build();
+                return notification;
             }
-            remoteViews.setOnClickPendingIntent(R.id.tv_task, homeIntent);
-            builder.setCustomContentView(remoteViews);
+            if (remoteViews != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                builder.setCustomContentView(remoteViews);
+            }
+            notification = getDefaultNotification(pendingIntent, builder);
+            return notification;
+        } catch (Exception e) {
+            try {
+                notification = getDefaultNotification(pendingIntent, builder);
+                return notification;
+            } catch (Exception E) {
+            }
         }
-        Notification notification = builder
+        return null;
+    }
+
+    private Notification getDefaultNotification(PendingIntent pendingIntent, NotificationCompat.Builder builder) {
+        return builder
                 .setContentTitle(CHANNEL_NAME)
-                .setContentText("ymc 常驻Notification")
+                .setContentText(CHANNEL_CONTENT)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(null)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setLights(0, 0, 0)
@@ -127,7 +159,13 @@ public class CustomNotifyManager {
                 .setSound(null)
                 .setDefaults(NotificationCompat.FLAG_ONLY_ALERT_ONCE)
                 .build();
-        return notification;
+    }
+
+    private NotificationCompat.Builder getBuilder(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && NotificationUtil.findNotificationBuilder()) {
+            return new NotificationCompat.Builder(context, CHANNEL_ID);
+        }
+        return new NotificationCompat.Builder(context);
     }
 
     /**
@@ -146,28 +184,6 @@ public class CustomNotifyManager {
             }
         }
         return true;
-    }
-
-    /**
-     * 判断是否是小米系统
-     */
-    private static boolean isMIUI() {
-        // 获取缓存状态
-        String isMIUIStr = CacheUtils.getString("isMIUISystem", "");
-        if (!TextUtils.isEmpty(isMIUIStr)) {
-            return isMIUIStr.equals("true");
-        }
-        boolean isMIUISystem = isMIUISystem();
-        CacheUtils.putString("isMIUISystem", isMIUISystem + "");
-        return isMIUISystem;
-    }
-
-    /**
-     * 判断是否是小米系统
-     */
-    private static boolean isMIUISystem() {
-        return hasProperties(KEY_MIUI_VERSION_CODE, KEY_MIUI_VERSION_NAME, KEY_MIUI_INTERNAL_STORAGE)
-                || !isEmptyVersionName(KEY_MIUI_VERSION_NAME);
     }
 
     private static boolean hasProperties(String... properties) {
@@ -203,7 +219,7 @@ public class CustomNotifyManager {
      */
     public static boolean isSDcardExist() {
         try {
-            return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+            return Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
         } catch (Exception e) {
             e.printStackTrace();
         }

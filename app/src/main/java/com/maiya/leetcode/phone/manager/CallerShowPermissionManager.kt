@@ -11,26 +11,17 @@ import android.net.Uri
 import android.os.Build
 import android.os.Process
 import android.provider.Settings
-import com.preface.megatron.report.pio.ActiveEvent
-import com.preface.megatron.report.pio.ActiveReportManager
-import com.preface.permission.easypermission.AndPermission
-import com.qsmy.business.app.permission.RuntimeRationale
-import com.qsmy.business.common.toast.ToastUtils
-import com.qsmy.business.common.toast.etoast.permission.OpPermissionUtils
-import com.qsmy.business.common.toast.etoast.permission.rom.RomUtils
-import com.qsmy.lib.common.log.LogUtils
+import com.maiya.leetcode.MApplication
+import com.maiya.leetcode.permission.OpPermissionUtils
+import com.maiya.leetcode.permission.rom.RomUtils
+import com.maiya.leetcode.util.LogUtils
+import com.yanzhenjie.permission.AndPermission
 import java.lang.reflect.Method
 
-
 /**
- * Created by chenxiangxiang on 2020/5/18.
- * 权限申请步骤：1.通讯录权限 2.拨打电话和管理电话权限 3.手机通话记录权限
- * 弹框弹出：
- * 1.来电悬浮框权限  ——————悬浮框权限设置页面
- * 2.修改铃声设置权限   ——————修改系统设置页面
- * 3.设置来电通知权限  ————————通知使用权权限
- *
+ * 电话显示权限工具类
  */
+
 class CallerShowPermissionManager private constructor() {
 
     companion object {
@@ -70,35 +61,18 @@ class CallerShowPermissionManager private constructor() {
         } else {
             PERMISSION_VIDEO_RING_2
         }
-        val hasPermissions = AndPermission.hasPermissions(context, permissions)
+        val hasPermissions = AndPermission.hasAlwaysDeniedPermission(context, permissions.toString())
         if (hasPermissions) {
             callSuccess(callBack)
             return
         }
         try {
-            AndPermission.with(context)
-                    .runtime()
+            AndPermission.with(MApplication.instance)
                     .permission(permissions)
-                    .rationale(RuntimeRationale())
-                    .onGranted { list ->
-                        if (list?.contains(Manifest.permission.CALL_PHONE) == true) {
-                            ActiveReportManager.report(ActiveEvent.CALLBACK_CALL_PERMISSION_SUCCESS, null)
-                        }
-                        if (list?.contains(Manifest.permission.READ_CONTACTS) == true) {
-                            ActiveReportManager.report(ActiveEvent.CALLBACK_CONTACTS_PERMISSION_SUCCESS, null)
-                        }
-                        callSuccess(callBack)
-                    }
-                    .onDenied { list ->
-                        if (list?.contains(Manifest.permission.CALL_PHONE) == true) {
-                            ActiveReportManager.report(ActiveEvent.CALLBACK_CALL_PERMISSION_FAILED, null)
-                        }
-                        if (list?.contains(Manifest.permission.READ_CONTACTS) == true) {
-                            ActiveReportManager.report(ActiveEvent.CALLBACK_CONTACTS_PERMISSION_FAILED, null)
-                        }
+                    .onGranted {
+                    }.onDenied{
                         callFailed(callBack)
-                    }
-                    .start()
+                    }.start()
         } catch (e: Exception) {
             callFailed(callBack)
         }
@@ -114,8 +88,6 @@ class CallerShowPermissionManager private constructor() {
         if (!OpPermissionUtils.checkPermission(context)) {
             //跳转到悬浮窗设置
             toRequestFloatWindPermission(context)
-        } else {
-            ActiveReportManager.report(ActiveEvent.CALLBACK_FLOAT_PERMISSION_SUCCESS, null)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(context)) {
             //准许系统修改
@@ -124,16 +96,10 @@ class CallerShowPermissionManager private constructor() {
         if (!isAllowed(context)) {
             //后台弹出权限
             openSettings(context)
-        } else {
-            if (RomUtils.checkIsMiuiRom()) {
-                ActiveReportManager.report(ActiveEvent.CALLBACK_FLOAT_PERMISSION_SUCCESS, null)
-            }
         }
         if (!notificationListenerEnable(context)) {
             //通知使用权
             gotoNotificationAccessSetting()
-        } else {
-            ActiveReportManager.report(ActiveEvent.CALLBACK_NOTIFICATION_PERMISSION_SUCCESS, null)
         }
         if (perArray.size != 0) {
             context.startActivities(perArray.toTypedArray())
@@ -154,31 +120,21 @@ class CallerShowPermissionManager private constructor() {
             //跳转到悬浮窗设置
             i++
             sb.append("$i 、设置来电视频悬浮框\n")
-        } else {
-            ActiveReportManager.report(ActiveEvent.CALLBACK_FLOAT_PERMISSION_SUCCESS, null)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(context)) {
             //准许系统修改
             i++
             sb.append("$i 、修改铃声设置权限\n")
-        } else {
-            ActiveReportManager.report(ActiveEvent.CALLBACK_SYSTEM_PERMISSION_SUCCESS, null)
         }
         if (!isAllowed(context)) {
             //后台弹出权限
             i++
             sb.append("$i 、开启后台弹出页面\n")
-        } else {
-            if (RomUtils.checkIsMiuiRom()) {
-                ActiveReportManager.report(ActiveEvent.CALLBACK_FLOAT_PERMISSION_SUCCESS, null)
-            }
         }
         if (!notificationListenerEnable(context)) {
             //通知使用权
             i++
             sb.append("$i 、开启通知使用权\n")
-        } else {
-            ActiveReportManager.report(ActiveEvent.CALLBACK_NOTIFICATION_PERMISSION_SUCCESS, null)
         }
         return sb.toString()
     }
@@ -201,7 +157,6 @@ class CallerShowPermissionManager private constructor() {
             context.startActivity(intent2)
             return
         } catch (e: Exception) {
-            // 暂时没有重现报错手机 魅族手机权限尝试请求
             if (RomUtils.checkIsMeizuRom()) {
                 try {
                     val intent = Intent("com.meizu.safe.security.SHOW_APPSEC")
@@ -209,16 +164,16 @@ class CallerShowPermissionManager private constructor() {
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     context.startActivity(intent)
                 } catch (e: java.lang.Exception) {
-                    ToastUtils.showToast("请在权限管理中打开悬浮窗管理权限")
+                    LogUtils.e("请在权限管理中打开悬浮窗管理权限")
                 }
             }
-            ToastUtils.showToast("请在权限管理中打开悬浮窗管理权限")
+            LogUtils.e("请在权限管理中打开悬浮窗管理权限")
             return
         }
     }
 
     /**
-     * 判断后台弹出权限
+     * 小米 判断后台弹出权限
      */
     private fun isAllowed(context: Context): Boolean {
         if (RomUtils.checkIsMiuiRom()) {
@@ -248,10 +203,10 @@ class CallerShowPermissionManager private constructor() {
                 intent.data = Uri.parse("package:${context.packageName}")
                 perArray.add(intent)
             } catch (e: java.lang.Exception) {
-                ToastUtils.showToast("请在权限管理中打开后台弹出权限")
+                LogUtils.e("请在权限管理中打开后台弹出权限")
             }
         } else {
-            ToastUtils.showToast("android 6.0以下")
+            LogUtils.e("android 6.0以下")
         }
     }
 
@@ -265,9 +220,6 @@ class CallerShowPermissionManager private constructor() {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.data = Uri.parse("package:${context.packageName}")
                 perArray.add(intent)
-            } else {
-                ActiveReportManager.report(ActiveEvent.CALLBACK_SYSTEM_PERMISSION_SUCCESS, null)
-                ToastUtils.showToast("已同意修改默认系统设置")
             }
         }
     }

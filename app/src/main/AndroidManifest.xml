@@ -45,7 +45,7 @@
     <application
         android:name=".MApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_home"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -60,64 +60,27 @@
         </activity>
         <activity android:name=".SplashActivity" />
         <activity android:name=".MainActivity" />
-        <activity
-            android:name=".phone.PhoneCallActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-            <!-- region provides ongoing call UI -->
-            <intent-filter>
-                <action android:name="android.intent.action.DIAL" />
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="tel" />
-            </intent-filter>
-            <!-- endregion -->
-
-
-            <!-- region provides dial UI -->
-            <intent-filter>
-                <action android:name="android.intent.action.DIAL" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <!-- endregion -->
-        </activity>
-
+        <!-- 电话service -->
         <service
-            android:name=".phone.manager.PhoneCallService"
-            android:permission="android.permission.BIND_INCALL_SERVICE">
-            <meta-data
-                android:name="android.telecom.IN_CALL_SERVICE_UI"
-                android:value="true" />
-            <meta-data
-                android:name="android.telecom.IN_CALL_SERVICE_RINGING"
-                android:value="false" />
-            <meta-data
-                android:name="android.telecom.INCLUDE_EXTERNAL_CALLS"
-                android:value="true" />
-
-            <intent-filter android:priority="1000">
-                <action android:name="android.telecom.InCallService" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".phone.manager.CallListenerService"
+            android:name=".phone.service.CallListenerService"
             android:enabled="true"
             android:exported="false">
             <intent-filter android:priority="1000">
                 <action android:name=".phone.manager.CallListenerService" />
             </intent-filter>
-        </service> <!-- 电话状态接收广播 -->
+
+        </service>
+
+        <!-- 电话状态接收广播 -->
         <receiver android:name=".phone.receiver.PhoneStateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
+
+        <!-- 开机广播 -->
         <receiver android:name=".phone.receiver.AutoStartReceiver">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.RECEIVE_BOOT_COMPLETED" />

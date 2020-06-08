@@ -2,8 +2,6 @@ package com.maiya.leetcode.phone.service;
 
 import android.os.Binder;
 
-import com.maiya.leetcode.phone.manager.CallListenerService;
-
 import java.lang.ref.WeakReference;
 
 /**

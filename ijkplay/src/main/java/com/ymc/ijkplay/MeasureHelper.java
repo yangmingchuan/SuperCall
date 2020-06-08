@@ -5,8 +5,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.maiya.leetcode.R;
-
 import java.lang.ref.WeakReference;
 
 

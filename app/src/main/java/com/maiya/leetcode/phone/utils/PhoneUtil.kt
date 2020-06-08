@@ -3,7 +3,7 @@ package com.maiya.leetcode.phone.utils
 import android.app.ActivityManager
 import android.content.Context
 import android.text.TextUtils
-import com.maiya.leetcode.phone.manager.CallListenerService
+import com.maiya.leetcode.phone.service.CallListenerService
 
 /**
  * Author : ymc
@@ -35,7 +35,7 @@ object PhoneUtil {
     /**
      * 判断service 是否启动
      */
-    fun isServiceRunning(serviceClass: Class<CallListenerService>,context: Context): Boolean {
+    fun isServiceRunning(serviceClass: Class<CallListenerService>, context: Context): Boolean {
         val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager ?: return false
         for (service in manager.getRunningServices(Int.MAX_VALUE)) {
             if (serviceClass.name == service.service.className) {

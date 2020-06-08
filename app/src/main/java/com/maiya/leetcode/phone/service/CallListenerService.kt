@@ -1,4 +1,4 @@
-package com.maiya.leetcode.phone.manager
+package com.maiya.leetcode.phone.service
 
 import android.app.Service
 import android.content.Context
@@ -11,8 +11,6 @@ import androidx.core.content.ContextCompat
 import com.maiya.leetcode.phone.impl.PhoneStateActionImpl
 import com.maiya.leetcode.phone.impl.PhoneStateListenerImpl
 import com.maiya.leetcode.phone.receiver.AutoStartReceiver
-import com.maiya.leetcode.phone.service.CustomNotifyManager
-import com.maiya.leetcode.phone.service.TaskServiceBinder
 import com.maiya.leetcode.phone.utils.CacheUtils
 import com.maiya.leetcode.phone.utils.PhoneCallUtil
 
@@ -55,7 +53,7 @@ class CallListenerService : Service() {
         try {
             val intent = Intent(this, CallListenerService::class.java)
             ContextCompat.startForegroundService(this, intent)
-            val notification = CustomNotifyManager.getInstance().getStepNotifyNotification(this, content, btn)
+            val notification = CustomNotifyManager.getInstance().getNotifyNotification(this, content, btn)
             startForeground(CustomNotifyManager.STEP_COUNT_NOTIFY_ID, notification)
             Log.e("ymc", "CallListenerService   forceForeground ")
         } catch (e: Exception) {
