@@ -1,16 +1,15 @@
-package com.maiya.leetcode
+package com.maiya.leetcode.view
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.maiya.leetcode.R
 import com.maiya.leetcode.hit.FixDexUtil
 import com.yanzhenjie.permission.AndPermission
-import com.yanzhenjie.permission.RequestExecutor
 import kotlinx.android.synthetic.main.activity_splash.*
 import java.io.File
 

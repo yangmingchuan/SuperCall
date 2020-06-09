@@ -1,7 +1,8 @@
-package com.maiya.leetcode
+package com.maiya.leetcode.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.maiya.leetcode.R
 import com.maiya.leetcode.hit.BugClass
 import kotlinx.android.synthetic.main.activity_main.*
 

@@ -1,5 +1,6 @@
 package com.maiya.leetcode.phone.service
 
+import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -29,9 +30,10 @@ class CallListenerService : Service() {
 
         const val PHONE_CALL_ANSWER = "phone_call_answer"
         const val PHONE_CALL_DISCONNECT = "phone_call_disconnect"
-
-        const val ACTION_PHONE_STATE = "action_phone_state"  //电话状态监听处理
-        const val ACTION_PHONE_CALL = "action_phone_call"    //电话操作处理（接听、挂断等）
+        //电话状态监听处理
+        const val ACTION_PHONE_STATE = "action_phone_state"
+        //电话操作处理（接听、挂断等）
+        const val ACTION_PHONE_CALL = "action_phone_call"
 
     }
 
@@ -42,10 +44,11 @@ class CallListenerService : Service() {
     private var callState: Int? = -1
     private var phoneNumber: String? = null
     private val callServiceBinder: TaskServiceBinder = TaskServiceBinder()
+    private var notification: Notification? = null
 
     override fun onCreate() {
         super.onCreate()
-        forceForeground("","")
+        forceForeground("", "")
         initPhoneStateListener()
     }
 
@@ -53,7 +56,7 @@ class CallListenerService : Service() {
         try {
             val intent = Intent(this, CallListenerService::class.java)
             ContextCompat.startForegroundService(this, intent)
-            val notification = CustomNotifyManager.getInstance().getNotifyNotification(this, content, btn)
+            notification = CustomNotifyManager.getInstance().getNotifyNotification(this, content, btn)
             startForeground(CustomNotifyManager.STEP_COUNT_NOTIFY_ID, notification)
             Log.e("ymc", "CallListenerService   forceForeground ")
         } catch (e: Exception) {
@@ -61,6 +64,12 @@ class CallListenerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (notification == null) {
+            notification = CustomNotifyManager.getInstance().getNotifyNotification(this, "", "")
+        }
+        if (notification != null) {
+            startForeground(CustomNotifyManager.STEP_COUNT_NOTIFY_ID, notification)
+        }
         if (intent == null) {
             return START_STICKY
         }
@@ -112,7 +121,7 @@ class CallListenerService : Service() {
 
     //来去电的几个状态
     private fun dealWithCallAction(state: Int, phoneNumber: String?) {
-        if(CacheUtils.getString(CacheUtils.KEY_SET_RING_TYPE, "").equals(CacheUtils.getString(CacheUtils.TYPE_RING_VIDEO, ""))){
+        if (CacheUtils.getString(CacheUtils.KEY_SET_RING_TYPE, "").equals(CacheUtils.getString(CacheUtils.TYPE_RING_VIDEO, ""))) {
             return
         }
         when (state) {

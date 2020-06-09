@@ -4,19 +4,19 @@ import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.maiya.leetcode.MApplication
 import com.maiya.leetcode.R
-import com.maiya.leetcode.phone.PhoneActivity.Code.REQUEST_CODE_WRITE_SETTINGS
+import com.maiya.leetcode.dialog.RingPermissionDialog
+import com.maiya.leetcode.phone.manager.CallerShowManager
 import com.yanzhenjie.permission.AndPermission
 import kotlinx.android.synthetic.main.activity_phone.*
 
 
 /**
  * 电话相关功能主页
- * @author ymc  2020年4月29日11点11分
  *
  */
 
@@ -39,19 +39,19 @@ class PhoneActivity : AppCompatActivity() {
             val intent = Intent(this, PhoneListActivity::class.java)
             startActivity(intent)
         }
+        tv_set_ring.setOnClickListener{
+            var dialog = RingPermissionDialog(this)
+            dialog.getRingVideoPermission(this,object :CallerShowManager.OnPerManagerListener{
+                override fun onGranted() {
+                    Toast.makeText(MApplication.instance,"请至权限管理同意权限，才能设置视频铃声.",Toast.LENGTH_SHORT).show()
+                }
 
-    }
+                override fun onDenied() {
+                    dialog.show()
+                }
 
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            REQUEST_CODE_WRITE_SETTINGS -> {
-                if (Settings.System.canWrite(applicationContext)) Toast.makeText(this, "获取了修改系统权限", Toast.LENGTH_SHORT).show()
-                else Toast.makeText(this, "拒绝了修改系统权限", Toast.LENGTH_SHORT).show()
-            }
+            })
         }
-
     }
 
     /**
@@ -71,12 +71,6 @@ class PhoneActivity : AppCompatActivity() {
                     }
                     Toast.makeText(applicationContext, "权限拒绝", Toast.LENGTH_SHORT).show()
                 }.start()
-
-    }
-
-
-    object Code {
-        const val REQUEST_CODE_WRITE_SETTINGS = 0x001
 
     }
 

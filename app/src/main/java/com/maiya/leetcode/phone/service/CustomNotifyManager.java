@@ -162,7 +162,7 @@ public class CustomNotifyManager {
     }
 
     private NotificationCompat.Builder getBuilder(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && NotificationUtil.findNotificationBuilder()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
             return new NotificationCompat.Builder(context, CHANNEL_ID);
         }
         return new NotificationCompat.Builder(context);
