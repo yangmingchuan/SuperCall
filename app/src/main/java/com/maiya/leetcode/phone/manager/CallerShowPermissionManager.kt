@@ -13,7 +13,9 @@ import android.os.Process
 import android.provider.Settings
 import com.maiya.leetcode.MApplication
 import com.maiya.leetcode.permission.OpPermissionUtils
+import com.maiya.leetcode.permission.rom.MiuiUtils
 import com.maiya.leetcode.permission.rom.RomUtils
+import com.maiya.leetcode.permission.rom.VivoUtils
 import com.maiya.leetcode.util.LogUtils
 import com.yanzhenjie.permission.AndPermission
 import java.lang.reflect.Method
@@ -70,6 +72,7 @@ class CallerShowPermissionManager private constructor() {
             AndPermission.with(MApplication.instance)
                     .permission(permissions)
                     .onGranted {
+                        callSuccess(callBack)
                     }.onDenied{
                         callFailed(callBack)
                     }.start()
@@ -136,6 +139,11 @@ class CallerShowPermissionManager private constructor() {
             i++
             sb.append("$i 、开启通知使用权\n")
         }
+        if (!isLock(context)) {
+            //通知使用权
+            i++
+            sb.append("$i 、开启锁屏显示\n")
+        }
         return sb.toString()
     }
 
@@ -173,24 +181,29 @@ class CallerShowPermissionManager private constructor() {
     }
 
     /**
-     * 小米 判断后台弹出权限
+     * 判断锁屏显示
      */
-    private fun isAllowed(context: Context): Boolean {
+    private fun isLock(context: Context): Boolean {
         if (RomUtils.checkIsMiuiRom()) {
-            val ops = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-            try {
-                // 10021 为后台弹出权限id
-                val op = 10021
-                val method: Method = ops.javaClass.getMethod("checkOpNoThrow",
-                        *arrayOf(Int::class.javaPrimitiveType, Int::class.javaPrimitiveType, String::class.java))
-                val result = method.invoke(ops, op, Process.myUid(), context.packageName) as Int
-                return result == AppOpsManager.MODE_ALLOWED
-            } catch (e: java.lang.Exception) {
-            }
-            return false
+            return MiuiUtils.canShowLockView(context)
+        } else if (RomUtils.checkIsVivoRom()) {
+            return VivoUtils.getVivoLockStatus(context)
         }
         return true
     }
+
+    /**
+     * 判断锁屏显示
+     */
+    private fun isAllowed(context: Context): Boolean {
+        if (RomUtils.checkIsMiuiRom()) {
+            return MiuiUtils.isAllowed(context)
+        } else if (RomUtils.checkIsVivoRom()) {
+            return VivoUtils.getvivoBgStartActivityPermissionStatus(context)
+        }
+        return true
+    }
+
 
     /**
      * 打开设置（后台弹出 锁屏显示）
