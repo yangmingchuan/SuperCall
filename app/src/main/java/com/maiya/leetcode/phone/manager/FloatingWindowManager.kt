@@ -14,6 +14,7 @@ import com.maiya.leetcode.phone.view.FloatingWindow
 class FloatingWindowManager private constructor() {
     var videoLink: String? = null
     var context: Context? = null
+    var mp4Url = "http://smallmv.eastday.com/mv/20200601171315831243932_1.mp4"
 
     companion object {
         val instance: FloatingWindowManager by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -29,7 +30,7 @@ class FloatingWindowManager private constructor() {
 
     fun show(number: String?, isCallIn: Boolean) {
         if(context != null){
-            videoLink = CacheUtils.getString(CacheUtils.SP_FILE_KEY, "http://smallmv.eastday.com/mv/20200601171315831243932_1.mp4")
+            videoLink = CacheUtils.getString(CacheUtils.SP_FILE_KEY, mp4Url)
             fw = FloatingWindow(
                     context,
                     videoLink,

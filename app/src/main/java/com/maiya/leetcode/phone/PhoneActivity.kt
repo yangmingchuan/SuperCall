@@ -1,19 +1,20 @@
 package com.maiya.leetcode.phone
 
 import android.Manifest
-import android.app.PendingIntent.getActivity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Message
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.maiya.leetcode.R
 import com.maiya.leetcode.dialog.RingPermissionDialog
+import com.maiya.leetcode.dialog.SetRingProgressDialog
 import com.maiya.leetcode.phone.manager.CallerShowManager
+import com.maiya.leetcode.phone.manager.FloatingWindowManager
 import com.maiya.leetcode.phone.utils.CacheUtils
 import com.maiya.leetcode.util.LogUtils
+import com.maiya.leetcode.util.context.ContextUtils
 import com.maiya.leetcode.util.file.UpdateDownloadUtils
 import com.maiya.leetcode.util.file.download.FileDownloadCallback
 import com.maiya.leetcode.util.file.download.FileDownloadRequest
@@ -30,6 +31,7 @@ import java.io.File
 
 @RequiresApi(Build.VERSION_CODES.M)
 class PhoneActivity : AppCompatActivity() {
+    private var setRingDialog: SetRingProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +71,7 @@ class PhoneActivity : AppCompatActivity() {
                 val content: String = it.updateRingPerContent()
                 if (content!=null) {
                     it.dismiss()
-                    downloadFile()
+                    downloadFile(FloatingWindowManager.instance.mp4Url)
                 }
             }
         }
@@ -85,37 +87,42 @@ class PhoneActivity : AppCompatActivity() {
             override fun onStart() {
                 super.onStart()
                 LogUtils.e("视频下载开始")
-                getView().downloadVideoStart()
+                if (setRingDialog == null) {
+                    setRingDialog = SetRingProgressDialog(applicationContext)
+                }
+                setRingDialog?.show()
             }
 
             override fun onProgress(progress: Int, networkSpeed: Long) {
-                if (currentProgress != progress && System.currentTimeMillis() - currentTime > 100 && progress != 100) { //限制刷新间隔最少100ms
-                    val msg = Message.obtain()
-                    msg.what = UpdateConfig.MSG_UPDATE
-                    msg.arg1 = progress
+                if (currentProgress != progress && System.currentTimeMillis() - currentTime > 100 && progress != 100) {
                     currentTime = System.currentTimeMillis()
+                    return
                 }
                 currentProgress = progress
-                LogUtils.e("视频下载中 进度：$currentProgress")
-                getView().downloadingVideo(currentProgress)
+                setRingDialog?.updateProgress(100, progress)
             }
 
             override fun onDone() {
                 super.onDone()
                 LogUtils.e("视频下载完成")
-                getView().downloadVideoEnd()
-                CacheUtils.putString(CacheUtils.SP_FILE_KEY, fileu)
-                CacheUtils.putString(IRingtoneManager.KEY_SET_RING_TYPE, IRingtoneManager.TYPE_RING_VIDEO)
-                if (Utils.isEmpty(mRingVideoEntity)) {
-                    return
+                setRingDialog?.let {
+                    if ( it.isShowing && !ContextUtils.isDestroyed(it.context)) {
+                        it.dismiss()
+                    }
+                    Toast.makeText(applicationContext, "设置视频铃声成功", Toast.LENGTH_SHORT).show()
+                    CacheUtils.putString(CacheUtils.SP_FILE_KEY, fileu)
                 }
-                TaskManager.INSTANCE.reportAchievementDot(getActivity(), TaskManager.ACHIEVEMENT_DOT_TYPE_VIDEO_RING
-                        , mRingVideoEntity.getId(), mRingVideoEntity.getNm().toString() + "-" + mRingVideoEntity.getUname())
+
             }
 
             override fun onFailure() {
                 super.onFailure()
-                getView().downloadVideoErr()
+                setRingDialog?.let {
+                    if (it.isShowing && !ContextUtils.isDestroyed(it.context)) {
+                        it.dismiss()
+                    }
+                }
+                Toast.makeText(applicationContext, "设置视频铃声失败", Toast.LENGTH_SHORT).show()
             }
         })
     }
