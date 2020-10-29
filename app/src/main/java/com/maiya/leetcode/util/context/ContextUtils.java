@@ -42,38 +42,6 @@ public class ContextUtils {
         }
     }
 
-    public static Activity findActivity(Fragment fragment) {
-        return fragment==null ? null : fragment.getActivity();
-    }
-
-    public static Activity findActivity(android.app.Fragment fragment) {
-        return fragment == null ? null : fragment.getActivity();
-    }
-
-    public static Activity findActivity(View view) {
-        if (view!=null && view.getContext() !=null) {
-            Context context = null;
-            if (view.getContext().getClass().getName().contains("com.android.internal.policy.DecorContext")) {
-                try {
-                    Field field = view.getContext().getClass().getDeclaredField("mPhoneWindow");
-
-                    field.setAccessible(true);
-                    Object obj = field.get(view.getContext());
-                    Method m1 = obj.getClass().getMethod("getContext");
-
-                    context = (Context)((Context)m1.invoke(obj));
-                } catch (Exception var5) {
-                }
-            } else {
-                context = view.getContext();
-            }
-
-            return findActivity(context);
-        } else {
-            return null;
-        }
-    }
-
     public static Activity findActivity(Context context) {
         if (context == null) {
             return null;

@@ -20,18 +20,25 @@ object OpPermissionUtils {
 
     fun checkPermission(context: Context): Boolean { //6.0 版本之后由于 google 增加了对悬浮窗权限的管理，所以方式就统一了
         if (Build.VERSION.SDK_INT < 23) {
-            if (checkIsMiuiRom()) {
-                return miuiPermissionCheck(context)
-            } else if (checkIsMeizuRom()) {
-                return meizuPermissionCheck(context)
-            } else if (checkIsHuaweiRom()) {
-                return huaweiPermissionCheck(context)
-            } else if (checkIs360Rom()) {
-                return qikuPermissionCheck(context)
-            } else if (checkIsOppoRom()) {
-                return oppoROMPermissionCheck(context)
-            } else if (RomUtils.checkIsVivoRom()) {
-                return vivoROMPermissionCheck(context)
+            when {
+                checkIsMiuiRom() -> {
+                    return miuiPermissionCheck(context)
+                }
+                checkIsMeizuRom() -> {
+                    return meizuPermissionCheck(context)
+                }
+                checkIsHuaweiRom() -> {
+                    return huaweiPermissionCheck(context)
+                }
+                checkIs360Rom() -> {
+                    return qikuPermissionCheck(context)
+                }
+                checkIsOppoRom() -> {
+                    return oppoROMPermissionCheck(context)
+                }
+                RomUtils.checkIsVivoRom() -> {
+                    return vivoROMPermissionCheck(context)
+                }
             }
         }
         return commonROMPermissionCheck(context)
@@ -62,16 +69,20 @@ object OpPermissionUtils {
     }
 
     private fun commonROMPermissionCheck(context: Context): Boolean { //最新发现魅族6.0的系统这种方式不好用，天杀的，只有你是奇葩，没办法，单独适配一下
-        return if (checkIsMeizuRom()) {
-            meizuPermissionCheck(context)
-        } else if (RomUtils.checkIsVivoRom()) {
-            VivoUtils.checkFloatWindowPermission(context)
-        } else {
-            var result = true
-            if (Build.VERSION.SDK_INT >= 23) {
-                result = Settings.canDrawOverlays(context)
+        return when {
+            checkIsMeizuRom() -> {
+                meizuPermissionCheck(context)
             }
-            result
+            RomUtils.checkIsVivoRom() -> {
+                VivoUtils.checkFloatWindowPermission(context)
+            }
+            else -> {
+                var result = true
+                if (Build.VERSION.SDK_INT >= 23) {
+                    result = Settings.canDrawOverlays(context)
+                }
+                result
+            }
         }
     }
 }

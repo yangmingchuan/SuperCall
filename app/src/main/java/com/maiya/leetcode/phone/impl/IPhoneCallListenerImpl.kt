@@ -13,7 +13,7 @@ import java.lang.Exception
 class IPhoneCallListenerImpl : IPhoneCallListener {
 
     override fun onAnswer() {
-        val mContext = MApplication.instance.getContext()
+        val mContext = MApplication().getInstance()
         try {
             val intent = Intent(mContext, ForegroundActivity::class.java)
             intent.action = CallListenerService.ACTION_PHONE_CALL
@@ -32,7 +32,7 @@ class IPhoneCallListenerImpl : IPhoneCallListener {
 
     override fun onDisconnect() {
         Log.e("ymc"," onDisconnect")
-        val mContext = MApplication.instance.getContext()
+        val mContext = MApplication().getInstance()
         try {
             val intent = Intent(mContext, ForegroundActivity::class.java)
             intent.action = CallListenerService.ACTION_PHONE_CALL

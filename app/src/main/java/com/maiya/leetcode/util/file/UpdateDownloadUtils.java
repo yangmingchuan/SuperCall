@@ -18,9 +18,9 @@ public class UpdateDownloadUtils {
     /**
      * 修改升级时下载 apk 的路径
      */
-    private static String takeApkFile() {
+    private static String takeApkFile(Context context) {
         String fileName = "";
-        File directory = FileUtils.getExternalFilesDirectory(MApplication.Companion.getInstance(), APK_FILE_NAME);
+        File directory = FileUtils.getExternalFilesDirectory(context, APK_FILE_NAME);
         if (directory != null) {
             fileName = directory.getAbsolutePath();
         }
@@ -33,9 +33,9 @@ public class UpdateDownloadUtils {
      * @param downloadUrl
      * @return
      */
-    public static String getApkUpdateFileName(String downloadUrl) {
+    public static String getApkUpdateFileName(String downloadUrl,Context context) {
         String apkName = ParseMD5Util.parseStrToMd5L16(downloadUrl) + ".apk";
-        String apkPath = takeApkFile() + "/" + apkName;
+        String apkPath = takeApkFile(context) + "/" + apkName;
         return apkPath;
     }
 

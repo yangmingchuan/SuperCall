@@ -1,7 +1,6 @@
 package com.maiya.leetcode
 
 import android.app.Application
-import android.content.Context
 import com.maiya.leetcode.phone.manager.CallerShowManager
 import com.maiya.leetcode.phone.utils.GlobalActivityLifecycleMonitor
 
@@ -12,24 +11,11 @@ import com.maiya.leetcode.phone.utils.GlobalActivityLifecycleMonitor
  */
 
 class MApplication : Application() {
-
-    private val sContext = this
-
-     fun getContext() : Context {
-        return sContext
-    }
-
-    /**
-     * 延迟 单例 初始化
-     */
-    companion object {
-        val instance : MApplication by lazy {
-            MApplication()
-        }
-    }
+    private lateinit var myApplication: MApplication
 
     override fun onCreate() {
         super.onCreate()
+        myApplication = this
         /**
          * 生命周期监控
          */
@@ -38,5 +24,8 @@ class MApplication : Application() {
         CallerShowManager.instance.initCallerShow(this)
     }
 
-
+    @Synchronized
+    fun getInstance(): MApplication {
+        return myApplication
+    }
 }

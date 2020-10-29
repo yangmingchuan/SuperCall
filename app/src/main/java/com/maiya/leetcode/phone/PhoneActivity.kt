@@ -69,16 +69,14 @@ class PhoneActivity : AppCompatActivity() {
         ringPerDialog?.let {
             if (it.isShowing) {
                 val content: String = it.updateRingPerContent()
-                if (content!=null) {
-                    it.dismiss()
-                    downloadFile(FloatingWindowManager.instance.mp4Url)
-                }
+                it.dismiss()
+                downloadFile(FloatingWindowManager.instance.mp4Url)
             }
         }
     }
 
     private fun downloadFile(url: String?) {
-        val filePath: String = UpdateDownloadUtils.getApkUpdateFileName(url)
+        val filePath: String = UpdateDownloadUtils.getApkUpdateFileName(url,this)
         val fileu = filePath.split(".apk").toTypedArray()[0] + ".mp4"
         val file = File(fileu)
         FileDownloadRequest.download(url, file, FileDownloadTask.DOWN_LOAD_NO_FILTER_TYPE, object : FileDownloadCallback() {
@@ -94,6 +92,7 @@ class PhoneActivity : AppCompatActivity() {
             }
 
             override fun onProgress(progress: Int, networkSpeed: Long) {
+                LogUtils.e("视频下载中：$progress")
                 if (currentProgress != progress && System.currentTimeMillis() - currentTime > 100 && progress != 100) {
                     currentTime = System.currentTimeMillis()
                     return

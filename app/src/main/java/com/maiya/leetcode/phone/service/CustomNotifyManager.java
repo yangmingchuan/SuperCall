@@ -98,7 +98,7 @@ public class CustomNotifyManager {
 
             if (notShieldPhone()) {
                 // 暂时用同样的布局
-                if (NotificationUtil.isDarkNotificationTheme(MApplication.Companion.getInstance())) {
+                if (NotificationUtil.isDarkNotificationTheme(new MApplication().getInstance())) {
                     remoteViews = new RemoteViews(context.getPackageName(),
                             R.layout.layout_item_notification);
                 } else {
