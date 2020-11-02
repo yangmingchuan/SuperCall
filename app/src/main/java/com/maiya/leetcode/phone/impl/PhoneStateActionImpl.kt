@@ -18,25 +18,21 @@ class PhoneStateActionImpl private constructor() : IPhoneStateAction {
 
     override
     fun onCallOut(phoneNumber: String?) {
-        Log.e("ymc", "PhoneStateActionImpl  ACTION_CALL_OUT $phoneNumber")
         if (!TextUtils.isEmpty(phoneNumber)) {
             FloatingWindowManager.instance.show(phoneNumber, false)
         }
     }
 
     override fun onRinging(phoneNumber: String?) {
-        Log.e("ymc", "PhoneStateActionImpl  ACTION_RINGING $phoneNumber")
         if (!TextUtils.isEmpty(phoneNumber)) {
             FloatingWindowManager.instance.show(phoneNumber, true)
         }
     }
 
     override fun onPickUp(phoneNumber: String?) {
-        Log.e("ringTon", "PhoneStateActionImpl  ACTION_PICK_UP $phoneNumber")
     }
 
     override fun onHandUp() {
-        Log.e("ymc", "PhoneStateActionImpl  ACTION_HAND_UP ")
         FloatingWindowManager.instance.dismiss()
     }
 

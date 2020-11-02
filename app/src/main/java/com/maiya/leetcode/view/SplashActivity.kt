@@ -34,7 +34,10 @@ class SplashActivity : AppCompatActivity() {
     private fun requestPermission() {
         AndPermission.with(this)
                 .permission(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CALL_PHONE,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.ANSWER_PHONE_CALLS)
                 .onGranted {
                     Toast.makeText(applicationContext,"权限同意",Toast.LENGTH_SHORT).show()
                     init()

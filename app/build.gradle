@@ -59,6 +59,8 @@ dependencies {
     implementation 'com.googlecode.libphonenumber:carrier:1.99'
     implementation 'com.googlecode.libphonenumber:geocoder:2.99'
     implementation 'com.googlecode.libphonenumber:prefixmapper:2.109'
+
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
     testImplementation 'org.testng:testng:6.9.6'
 }
 

@@ -60,7 +60,7 @@ object PhoneCallUtil {
     private fun finalAnswer() {
         try {
             if (Build.VERSION.SDK_INT >= 21) {
-                var mediaSessionManager = MApplication().getInstance().getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+                val mediaSessionManager = MApplication().getInstance().getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
                 val activeSessions = mediaSessionManager.getActiveSessions(
                         ComponentName(MApplication().getInstance(), NotificationService::class.java)) as List<MediaController>
                 if (activeSessions.isNotEmpty()) {
@@ -88,7 +88,7 @@ object PhoneCallUtil {
             if (ActivityCompat.checkSelfPermission(MApplication().getInstance(), Manifest.permission.ANSWER_PHONE_CALLS) != PackageManager.PERMISSION_GRANTED) {
                 return
             }
-            telecomManager?.endCall()
+            telecomManager.endCall()
         } else {
             try {
                 val method: Method = Class.forName("android.os.ServiceManager")

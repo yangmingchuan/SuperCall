@@ -181,8 +181,7 @@ public class FileUtils {
     public synchronized static boolean checkFile(String path) {
         if (!TextUtils.isEmpty(path)) {
             File f = new File(path);
-            if (f != null && f.exists() && f.canRead()
-                    && (f.isDirectory() || (f.isFile() && f.length() > 0)))
+            if (f.exists() && f.canRead() && (f.isDirectory() || f.isFile() && f.length() > 0))
                 return true;
         }
         return false;
@@ -203,14 +202,7 @@ public class FileUtils {
      * 获取外部存储的Android/data/包名/files目录
      */
     public static File getExternalFilesDirectory(Context context, String type) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            if (isSDcardExist()) {
-                return context.getExternalFilesDir(type);
-            }
-        } else {
-            return context.getExternalFilesDir(type);
-        }
-        return null;
+        return context.getExternalFilesDir(type);
     }
 
     /**

@@ -20,8 +20,6 @@ import com.maiya.leetcode.phone.service.CallListenerService
 class PhoneStateReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.e("ymc", "ringtong PhoneStateReceiver")
-
         var manager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         var state = manager.callState
         var action = intent!!.action
@@ -36,12 +34,10 @@ class PhoneStateReceiver : BroadcastReceiver() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 ContextCompat.startForegroundService(context, intent)
-                Log.e("ymc", "ringtong 启动service成功")
             } else {
                 context.startService(intent)
             }
         } catch (e: Exception) {
-            Log.e("ymc", "ringtong 启动service失败")
         }
     }
 
