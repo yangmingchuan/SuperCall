@@ -40,9 +40,9 @@ public class CustomNotifyManager {
     public static final int STEP_COUNT_NOTIFY_ID = 100;
     public static final String ACTION_NOTIFICATION_CLICK = "com.ACTION_NOTIFICATION_CLICK";
     private static final String CHANNEL_ID = "channel_megatron_1";
-    private static final String CHANNEL_NAME = "荔枝铃声";
+    private static final String CHANNEL_NAME = "superCall";
 
-    private static final String CHANNEL_CONTENT = "荔枝铃声正在派发大量金币！";
+    private static final String CHANNEL_CONTENT = "SuperCall持续保护您的系统中...";
 
     private static NotificationManager manager;
     private static CustomNotifyManager instance;

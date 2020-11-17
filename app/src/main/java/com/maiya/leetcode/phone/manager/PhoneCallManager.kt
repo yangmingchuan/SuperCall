@@ -1,31 +1,28 @@
-package com.preface.megatron.tel.manager
+package com.maiya.leetcode.phone.manager
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.os.Build
-import android.support.annotation.RequiresApi
 import android.telecom.Call
 import android.telecom.TelecomManager
 import android.telecom.VideoProfile
 import android.text.TextUtils
-import com.preface.megatron.tel.interfaces.ICanAddCallChangedListener
-import com.preface.megatron.tel.interfaces.IPhoneCallInterface
+import androidx.annotation.RequiresApi
+import com.maiya.leetcode.MApplication
+import com.maiya.leetcode.phone.interfaces.ICanAddCallChangedListener
+import com.maiya.leetcode.phone.interfaces.IPhoneCallInterface
+import com.maiya.leetcode.phone.utils.GlobalActivityLifecycleMonitor
 import com.preface.megatron.tel.service.PhoneCallService
 import com.preface.megatron.tel.view.PhoneCallActivity
-import com.qsmy.business.App
-import com.qsmy.business.app.base.activity_fragment.GlobalActivityLifecycleMonitor
-import com.qsmy.lib.common.utils.Utils
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArraySet
 
-
 /**
- * @Author:fkq
- * @Date: 2020-07-06 16:53
- * @Description:
+ * 电话拨打管理
  */
+
 class PhoneCallManager private constructor() {
 
     private var audioManager: AudioManager? = null
@@ -46,7 +43,7 @@ class PhoneCallManager private constructor() {
     }
 
     init {
-        audioManager = App.getContext().getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        audioManager = MApplication().getSystemService(Context.AUDIO_SERVICE) as? AudioManager
     }
 
     fun hasDefaultCall(): Boolean = !mCallList.isNullOrEmpty()
@@ -82,7 +79,7 @@ class PhoneCallManager private constructor() {
         }
 
         val isForeground = GlobalActivityLifecycleMonitor.isAppOnForeground()
-        PhoneCallActivity.actionStart(App.getContext(), callId, isForeground)
+        PhoneCallActivity.actionStart(MApplication(), callId, isForeground)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -95,9 +92,6 @@ class PhoneCallManager private constructor() {
     }
 
     fun onCanAddCallChanged(canAddCall: Boolean) {
-        if (Utils.isEmpty(mICanAddCallChangedListener)) {
-            return
-        }
         mICanAddCallChangedListener.forEach {
             it?.onCanAddCallChanged(canAddCall)
         }
