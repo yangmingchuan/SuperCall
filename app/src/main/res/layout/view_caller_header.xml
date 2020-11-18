@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.maiya.call.phone.view.RoundImageView
+        android:id="@+id/iv_head_background_one"
+        android:layout_width="102dp"
+        android:layout_height="0dp"
+        android:radius="51dp"
+        android:src="@android:color/white"
+        android:alpha="0.05"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.maiya.call.phone.view.RoundImageView
+        android:id="@+id/iv_head_background_two"
+        android:layout_width="90dp"
+        android:layout_height="0dp"
+        android:radius="45dp"
+        android:src="@android:color/white"
+        android:alpha="0.08"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="@+id/iv_head_background_one"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_head_background_one"
+        app:layout_constraintRight_toRightOf="@+id/iv_head_background_one"
+        app:layout_constraintTop_toTopOf="@+id/iv_head_background_one" />
+
+    <com.maiya.call.phone.view.RoundImageView
+        android:id="@+id/iv_account_head"
+        android:layout_width="76dp"
+        android:layout_height="0dp"
+        android:radius="38dp"
+        android:src="@drawable/ic_head_default_passenger"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_head_background_one"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="@+id/iv_head_background_one"
+        app:layout_constraintRight_toRightOf="@+id/iv_head_background_one"
+        app:layout_constraintTop_toTopOf="@+id/iv_head_background_one" />
+
+    <TextView
+        android:id="@+id/tv_call_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="22dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_head_background_one"
+        tools:text="130-1234-5678" />
+
+    <TextView
+        android:id="@+id/tv_call_number_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="8dp"
+        android:alpha="0.7"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_call_number"
+        tools:text="中国 上海移动" />
+
+    <LinearLayout
+        android:id="@+id/tv_sim_card_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="6dp"
+        android:gravity="center_vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_call_number_info">
+
+        <ImageView
+            android:id="@+id/tv_sim_card_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            tools:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/tv_sim_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6.5dp"
+            android:alpha="0.7"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/sp_14"
+            tools:text="正在呼叫" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

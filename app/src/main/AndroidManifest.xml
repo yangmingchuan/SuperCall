@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.maiya.leetcode">
+    package="com.maiya.call">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -44,7 +44,7 @@
     <permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
 
     <application
-        android:name=".MApplication"
+        android:name="com.maiya.call.MApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_home"
         android:label="@string/app_name"
@@ -52,20 +52,20 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".phone.PhoneListActivity"></activity>
-        <activity android:name=".phone.PhoneActivity">
+        <activity android:name="com.maiya.call.phone.PhoneListActivity"></activity>
+        <activity android:name="com.maiya.call.phone.PhoneActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.SplashActivity" />
-        <activity android:name=".view.MainActivity" />
+        <activity android:name="com.maiya.call.view.SplashActivity" />
+        <activity android:name="com.maiya.call.view.MainActivity" />
 
         <!-- 电话service -->
         <service
-            android:name=".phone.service.CallListenerService"
+            android:name="com.maiya.call.phone.service.CallListenerService"
             android:enabled="true"
             android:exported="false">
             <intent-filter android:priority="1000">
@@ -75,7 +75,7 @@
         </service>
 
         <!-- 电话状态接收广播 -->
-        <receiver android:name=".phone.receiver.PhoneStateReceiver">
+        <receiver android:name="com.maiya.call.phone.receiver.PhoneStateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
@@ -83,7 +83,7 @@
         </receiver>
 
         <!-- 开机广播 -->
-        <receiver android:name=".phone.receiver.AutoStartReceiver">
+        <receiver android:name="com.maiya.call.phone.receiver.AutoStartReceiver">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.RECEIVE_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -93,7 +93,7 @@
 
         <!-- 通知使用权 android:process=":megatron" 导致不会弹出windows-->
         <service
-            android:name=".phone.service.NotificationService"
+            android:name="com.maiya.call.phone.service.NotificationService"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>

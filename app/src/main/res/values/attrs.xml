@@ -13,4 +13,8 @@
         <attr name="showPercent" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="RoundImageView">
+        <attr name="android:radius" />
+    </declare-styleable>
+
 </resources>

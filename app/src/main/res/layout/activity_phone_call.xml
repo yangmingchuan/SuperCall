@@ -1,85 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rl_user_info"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".phone.PhoneCallActivity">
+    android:background="#162131">
 
-    <com.maiya.leetcode.phone.ui.EmptyControlVideo
-        android:id="@+id/videoPlayer"
+    <CallHeaderView
+        android:id="@+id/caller_header_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="58dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_call_number_label"
+        android:id="@+id/tv_show_caller_keyboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/tv_call_number"
-        android:layout_centerHorizontal="true"
-        android:textColor="@android:color/white"
-        android:text="来电号码"
-        android:textSize="18sp" />
+        android:layout_marginBottom="26dp"
+        android:drawableTop="@drawable/ic_caller_keyboard"
+        android:gravity="center_horizontal"
+        android:text="拨号键盘"
+        android:textColor="@color/_99ffffff"
+        android:textSize="@dimen/sp_16"
+        app:layout_constraintBottom_toTopOf="@+id/cb_hold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
+    <!-- 第一排 -->
+    <TextView
+        android:id="@+id/tv_add_call"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableTop="@drawable/selector_caller_add_call"
+        android:enabled="false"
+        android:gravity="center_horizontal"
+        android:text="添加通话"
+        android:textColor="@drawable/selector_caller_action_enable_text_color_ffffff_99ffffff"
+        android:textSize="@dimen/sp_13"
+        app:layout_constraintBottom_toBottomOf="@+id/cb_hold"
+        app:layout_constraintLeft_toLeftOf="@+id/cb_speaker"
+        app:layout_constraintTop_toTopOf="@+id/cb_hold" />
+
+    <CheckBox
+        android:id="@+id/cb_hold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="26dp"
+        android:button="@null"
+        android:drawableTop="@drawable/selector_caller_hold"
+        android:enabled="false"
+        android:gravity="center_horizontal"
+        android:text="保持 "
+        android:textColor="@drawable/selector_caller_action_text_color_ffffff_99ffffff"
+        android:textSize="@dimen/sp_13"
+        app:layout_constraintBottom_toTopOf="@+id/iv_hand_up"
+        app:layout_constraintLeft_toLeftOf="@+id/iv_hand_up"
+        app:layout_constraintRight_toRightOf="@+id/iv_hand_up" />
+
+    <CheckBox
+        android:id="@+id/cb_recording"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableTop="@drawable/ic_caller_recording_disable"
+        android:gravity="center_horizontal"
+        android:text="录音"
+        android:textColor="@drawable/selector_caller_action_text_color_ffffff_99ffffff"
+        android:textSize="@dimen/sp_13"
+        app:layout_constraintBottom_toBottomOf="@+id/cb_hold"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintRight_toRightOf="@+id/cb_mute"
+        app:layout_constraintTop_toTopOf="@+id/cb_hold" />
+
+
+    <!-- 第二排 -->
+    <CheckBox
+        android:id="@+id/cb_speaker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableTop="@drawable/selector_caller_speaker"
+        android:gravity="center_horizontal"
+        android:text="　免提　"
+        android:textColor="@drawable/selector_caller_action_text_color_ffffff_99ffffff"
+        android:textSize="@dimen/sp_13"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_hand_up"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/iv_hand_up"
+        app:layout_constraintTop_toTopOf="@+id/iv_hand_up" />
+
+    <ImageView
+        android:id="@+id/iv_hand_up"
+        android:layout_width="54dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="60dp"
+        android:src="@drawable/ic_phone_hang_up"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <CheckBox
+        android:id="@+id/cb_mute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableTop="@drawable/selector_caller_mute"
+        android:gravity="center_horizontal"
+        android:text="静音"
+        android:textColor="@drawable/selector_caller_action_text_color_ffffff_99ffffff"
+        android:textSize="@dimen/sp_13"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_hand_up"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintLeft_toRightOf="@+id/iv_hand_up"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_hand_up" />
+
+    <android.support.constraint.Group
+        android:id="@+id/group_caller_hide_keyboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tv_show_caller_keyboard, tv_add_call, cb_hold
+        , cb_recording, cb_speaker, cb_mute" />
 
     <TextView
-        android:id="@+id/tv_call_number"
+        android:id="@+id/tv_key_input_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"
-        tools:text="133-9527-9527" />
+        android:textColor="@color/white"
+        android:textSize="27sp"
+        app:layout_constraintBottom_toTopOf="@+id/rv_caller_keyboard"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.47 "
+        tools:text="888" />
 
-    <TextView
-        android:id="@+id/tv_phone_calling_time"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_caller_keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="176dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="160dp"
+        android:numColumns="3"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/iv_hand_up"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageView
+        android:id="@+id/tv_hide_keyboard"
+        android:layout_width="45dp"
+        android:layout_height="0dp"
+        android:layout_marginRight="40dp"
+        android:alpha="0.7"
+        android:src="@drawable/ic_caller_keyboard"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_hand_up"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_hand_up" />
+
+    <android.support.constraint.Group
+        android:id="@+id/group_caller_show_keyboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="通话中：01:33"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
         android:visibility="gone"
-        tools:visibility="visible" />
+        app:constraint_referenced_ids="tv_key_input_content
+        , rv_caller_keyboard, tv_hide_keyboard" />
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <com.preface.megatron.tel.view.CallHoldView
+        android:id="@+id/call_hold_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="10dp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_phone_hang_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_phone_hang_up"
-            android:drawablePadding="16dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="挂  断"
-            android:textColor="@android:color/white"
-            tools:visibility="visible" />
+    <include
+        android:id="@+id/ll_call_in"
+        layout="@layout/view_phone_operation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_phone_pick_up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
-            android:layout_toRightOf="@id/tv_phone_hang_up"
-            android:drawableTop="@drawable/ic_phone_pick_up"
-            android:drawablePadding="16dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="接  听"
-            android:textColor="@android:color/white"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-    </RelativeLayout>
-
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
