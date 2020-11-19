@@ -6,7 +6,6 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.widget.ImageView
 import com.maiya.call.R
-import com.preface.megatron.R
 
 /**
  * @ClassName: [RoundImageView]
@@ -30,7 +29,7 @@ class RoundImageView @JvmOverloads constructor (
 
     private inline fun parseAttrs(ctx: Context, attrs: AttributeSet? = null) {
         attrs?.run {
-            context.obtainStyledAttributes(this, R.styleable.RoundImageView)?.run {
+            context.obtainStyledAttributes(this, R.styleable.RoundImageView).run {
                 try {
                     mBackgroundRadius = getDimension(R.styleable.RoundImageView_android_radius, mBackgroundRadius)
                 } finally {

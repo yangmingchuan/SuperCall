@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.provider.ContactsContract
+import com.maiya.call.util.LogUtils
 
 /**
  * Author : ymc
@@ -12,41 +13,43 @@ import android.provider.ContactsContract
  */
 
 object ContactUtil {
-    private var cursor: Cursor? = null
-
     /**
      * 根据电话号码获取联系人
      */
     @JvmStatic
-    @SuppressLint("SimpleDateFormat")
-    fun getContentCallLog(mContext: Context?, number: String?): String? {
+    fun getContentCallLog(mContext: Context?, number: String?): ContactInfo? {
         try {
-            var numberPerson: String?
-            val cr = mContext?.contentResolver
-            cursor = cr?.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
-            while (cursor!!.moveToNext()) {
-                val nameFieldColumnIndex = cursor?.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME)
-                val contact = nameFieldColumnIndex?.let { cursor?.getString(it) }
-                //取得电话号码
-                val contactId = cursor?.getColumnIndex(ContactsContract.Contacts._ID)?.let { cursor?.getString(it) }
-                val phone = cr?.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + contactId, null, null)
-                while (phone!!.moveToNext()) {
-                    var phoneNumber = phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                    phoneNumber = phoneNumber.replace("-", "")
-                    phoneNumber = phoneNumber.replace(" ", "")
-                    if (number == phoneNumber) {
-                        numberPerson = contact
-                        return numberPerson
+            mContext?.contentResolver?.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+                    , arrayOf(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
+                    , ContactsContract.CommonDataKinds.Phone.PHOTO_URI
+                    , ContactsContract.CommonDataKinds.Phone.NUMBER)
+                    , null
+                    , null
+                    , null
+            )?.use { phoneCursor ->
+                while (phoneCursor.moveToNext()) {
+                    val columnIndex = phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                    if (columnIndex < 0) {
+                        continue
                     }
-                    //LogUtils.e("姓名：$contact ，电话：$PhoneNumber ")
+                    var phoneNumber = phoneCursor.getString(columnIndex)
+                    phoneNumber = phoneNumber?.replace("-", "")?.replace(" ", "")
+                    if (number == phoneNumber) {
+                        var displayName = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+                        if (displayName == null) {
+                            displayName = phoneNumber
+                        }
+                        return ContactInfo(displayName
+                                , phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI)))
+                    }
                 }
             }
             return null
         } catch (e: Exception) {
+            LogUtils.e(e)
             return null
-        } finally {
-            cursor?.close()
         }
     }
+
+    data class ContactInfo(val displayName: String, val photoUri: String?)
 }

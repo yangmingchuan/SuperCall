@@ -1,4 +1,4 @@
-package com.maiya.call.phone.view
+package com.maiya.call.phone.view.callheader
 
 import android.content.Context
 import android.os.Build
@@ -11,6 +11,8 @@ import androidx.annotation.RequiresApi
 import com.maiya.call.R
 import com.maiya.call.phone.interfaces.IPhoneCallInterface
 import com.maiya.call.phone.manager.PhoneCallManager
+import com.maiya.call.phone.utils.ContactUtil
+import com.maiya.call.phone.utils.imageload.GlideImageLoader
 import com.maiya.call.util.LogUtils
 import kotlinx.android.synthetic.main.view_caller_header.view.*
 
@@ -24,7 +26,7 @@ import kotlinx.android.synthetic.main.view_caller_header.view.*
 @RequiresApi(Build.VERSION_CODES.M)
 class CallHeaderView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr) {
+) : LinearLayout(context, attrs, defStyleAttr) ,  {
 
     private val INCOME_TEXT = "来电"
 
@@ -95,22 +97,22 @@ class CallHeaderView @JvmOverloads constructor(
         PhoneCallManager.instance.registerCallStateListener(callId, mCallStateListener)
 
         if (!isAddCall || PhoneCallManager.instance.getCallById(callId)?.state === Call.STATE_ACTIVE) {
-            tv_sim_card_info.setVisibilityCompat(View.VISIBLE)
-            presenter?.startTimer(callId)
+            tv_sim_card_info.visibility = View.VISIBLE
+            presenter.startTimer(callId)
         }
         mCallId = callId
 
-        tv_call_number.text = presenter?.formatPhoneNumber(phoneNumber)
+        tv_call_number.text = presenter.formatPhoneNumber(phoneNumber)
         PhoneCallManager.instance.getSlotIcon(callId)?.also {
             tv_sim_card_icon.setImageDrawable(it)
         }
 
-        presenter?.queryLocalContactInfo(context, phoneNumber)
-        presenter?.queryPhoneInfo(phoneNumber)
+        presenter.queryLocalContactInfo(context, phoneNumber)
+        presenter.queryPhoneInfo(phoneNumber)
     }
 
     fun unbindInfo() {
-        presenter?.stopTimer(mCallId)
+        presenter.stopTimer(mCallId)
     }
 
     override fun onDestroy() {
@@ -119,16 +121,13 @@ class CallHeaderView @JvmOverloads constructor(
     }
 
     fun onQueryLocalContactInfoSuccessful(info: ContactUtil.ContactInfo?) {
-        if (Utils.isEmptyAny(tv_call_number, iv_account_head)) {
-            return
-        }
         info?.let {
-            if (!Utils.isEmpty(it.displayName)) {
+            if (it.displayName !=null) {
                 tv_call_number.text = it.displayName
             }
 
-            if (!Utils.trimToEmptyNull(it.photoUri)) {
-                ImageLoader.with(context, iv_account_head, it.photoUri)
+            if (it.photoUri !=null) {
+                GlideImageLoader.displayImage( it.photoUri,iv_account_head)
             }
             return
         }
@@ -136,11 +135,11 @@ class CallHeaderView @JvmOverloads constructor(
     }
 
     fun onQueryPhoneInfoSuccessful(city: String?, type: String?) {
-        if (Utils.isEmpty(city) && Utils.isEmpty(type)) {
-            tv_call_number_info.setVisibilityCompat(View.GONE)
+        if (city ==null && type == null) {
+            tv_call_number_info.visibility = View.GONE
             return
         }
-        tv_call_number_info.setVisibilityCompat(View.VISIBLE)
+        tv_call_number_info.visibility = View.VISIBLE
 
         val flag = PhoneCallManager.instance.getCallById(mCallId)?.let {
             if (it.state === Call.STATE_RINGING) {
@@ -157,7 +156,7 @@ class CallHeaderView @JvmOverloads constructor(
             return
         }
         tv_call_number_info.text = tv_call_number_info.text.toString().replace(INCOME_TEXT, "")
-        tv_sim_card_info.setVisibilityCompat(View.VISIBLE)
+        tv_sim_card_info.visibility = View.VISIBLE
         tv_sim_card.text = time
     }
 }
