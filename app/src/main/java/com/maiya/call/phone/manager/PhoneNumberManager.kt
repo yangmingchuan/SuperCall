@@ -1,5 +1,8 @@
 package com.preface.megatron.tel.manager
 
+import com.maiya.call.phone.bean.PhoneMsg
+import com.maiya.call.phone.mode.Callback
+import com.maiya.call.phone.mode.PhoneModel
 import com.preface.megatron.common.bean.PhoneMsg
 import com.preface.megatron.tel.model.PhoneModel
 import com.qsmy.business.app.base.model.Callback

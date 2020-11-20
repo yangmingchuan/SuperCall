@@ -2,8 +2,8 @@ package com.maiya.call.phone.view.callheader
 
 import android.content.Context
 import com.maiya.call.base.BasePre
-
 import com.maiya.call.base.BaseView
+import com.maiya.call.phone.utils.ContactUtil
 
 
 /**
@@ -14,13 +14,26 @@ import com.maiya.call.base.BaseView
 class CallHeaderContract {
 
     interface View : BaseView {
-        fun getHotListErr(err: String?)
+
+        fun onQueryLocalContactInfoSuccessful(info: ContactUtil.ContactInfo?)
+
+        fun updateCallingTime(callId: String, time: String)
+
+        fun onQueryPhoneInfoSuccessful(city: String?, type: String?)
     }
 
     interface Presenter : BasePre<View> {
-        val hotListResult: Unit
 
-        fun saveHistory(context: Context?, historyList: List<String?>?)
-        fun getHistoryList(context: Context?, historyList: List<String?>?)
+        fun startTimer(s: String?)
+
+        fun removeTime(callId: String?)
+
+        fun stopTimer(callId: String?)
+
+        fun queryLocalContactInfo(context: Context, phoneNum: String)
+
+        fun queryPhoneInfo(phoneNum: String)
+
+        fun formatPhoneNumber(phoneNum: String?): String?
     }
 }

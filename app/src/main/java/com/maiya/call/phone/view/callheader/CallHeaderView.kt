@@ -11,6 +11,8 @@ import androidx.annotation.RequiresApi
 import com.maiya.call.R
 import com.maiya.call.phone.interfaces.IPhoneCallInterface
 import com.maiya.call.phone.manager.PhoneCallManager
+import com.maiya.call.phone.presenter.CallHeaderPresenter
+
 import com.maiya.call.phone.utils.ContactUtil
 import com.maiya.call.phone.utils.imageload.GlideImageLoader
 import com.maiya.call.util.LogUtils
@@ -26,9 +28,11 @@ import kotlinx.android.synthetic.main.view_caller_header.view.*
 @RequiresApi(Build.VERSION_CODES.M)
 class CallHeaderView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr) ,  {
+) : LinearLayout(context, attrs, defStyleAttr) , CallHeaderContract.View {
 
     private val INCOME_TEXT = "来电"
+
+    private var presenter: CallHeaderContract.Presenter? = null
 
     private val mCallStateListener = object : IPhoneCallInterface {
         override fun onCallStateChanged(call: Call?, state: Int) {
@@ -77,15 +81,9 @@ class CallHeaderView @JvmOverloads constructor(
 
     private var mCallId: String? = null
 
-    override fun initView() {
+    init {
         LayoutInflater.from(context).inflate(R.layout.view_caller_header, this, true)
-    }
-
-    override fun initData() {
-    }
-
-    override fun setViewListener() {
-
+        presenter = CallHeaderPresenter(this)
     }
 
     fun bindInfo(phoneNumber: String, callId: String, isAddCall: Boolean) {
@@ -98,29 +96,20 @@ class CallHeaderView @JvmOverloads constructor(
 
         if (!isAddCall || PhoneCallManager.instance.getCallById(callId)?.state === Call.STATE_ACTIVE) {
             tv_sim_card_info.visibility = View.VISIBLE
-            presenter.startTimer(callId)
+            presenter?.startTimer(callId)
         }
         mCallId = callId
 
-        tv_call_number.text = presenter.formatPhoneNumber(phoneNumber)
+        tv_call_number.text = presenter?.formatPhoneNumber(phoneNumber)
         PhoneCallManager.instance.getSlotIcon(callId)?.also {
             tv_sim_card_icon.setImageDrawable(it)
         }
 
-        presenter.queryLocalContactInfo(context, phoneNumber)
-        presenter.queryPhoneInfo(phoneNumber)
+        presenter?.queryLocalContactInfo(context, phoneNumber)
+        presenter?.queryPhoneInfo(phoneNumber)
     }
 
-    fun unbindInfo() {
-        presenter.stopTimer(mCallId)
-    }
-
-    override fun onDestroy() {
-        unbindInfo()
-        super.onDestroy()
-    }
-
-    fun onQueryLocalContactInfoSuccessful(info: ContactUtil.ContactInfo?) {
+    override fun onQueryLocalContactInfoSuccessful(info: ContactUtil.ContactInfo?) {
         info?.let {
             if (it.displayName !=null) {
                 tv_call_number.text = it.displayName
@@ -134,7 +123,7 @@ class CallHeaderView @JvmOverloads constructor(
         iv_account_head.setImageResource(R.drawable.ic_head_default_passenger)
     }
 
-    fun onQueryPhoneInfoSuccessful(city: String?, type: String?) {
+    override fun onQueryPhoneInfoSuccessful(city: String?, type: String?) {
         if (city ==null && type == null) {
             tv_call_number_info.visibility = View.GONE
             return
@@ -150,7 +139,7 @@ class CallHeaderView @JvmOverloads constructor(
         tv_call_number_info?.text = "$city $type$flag"
     }
 
-    fun updateCallingTime(callId: String, time: String) {
+    override fun updateCallingTime(callId: String, time: String) {
         LogUtils.e("updateCallingTime: $mCallId, $callId, $time")
         if (mCallId != callId) {
             return
@@ -159,4 +148,6 @@ class CallHeaderView @JvmOverloads constructor(
         tv_sim_card_info.visibility = View.VISIBLE
         tv_sim_card.text = time
     }
+
+
 }

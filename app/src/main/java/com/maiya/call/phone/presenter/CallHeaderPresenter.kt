@@ -6,20 +6,19 @@ import android.content.Context
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import com.maiya.call.base.BasePresenter
 import com.maiya.call.phone.bean.PhoneMsg
 import com.maiya.call.phone.utils.ContactUtils
+import com.maiya.call.phone.view.callheader.CallHeaderContract
 import com.preface.megatron.tel.manager.PhoneNumberManager
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * @ClassName: [CallHeaderPresenter]
- * @Description:
- *
- * Created by admin at 2020-07-08
- * @Email xiaosw0802@163.com
+ * 电话头部处理类
  */
+
 @TargetApi(Build.VERSION_CODES.M)
-class CallHeaderPresenter {
+class CallHeaderPresenter(view: CallHeaderContract.View) : BasePresenter<CallHeaderContract.View>(), CallHeaderContract.Presenter {
 
     private val mHandler by lazy {
         Handler(Looper.getMainLooper())
@@ -28,23 +27,27 @@ class CallHeaderPresenter {
         ConcurrentHashMap<String, Int>()
     }
 
-    inline fun queryLocalContactInfo(context: Context, phoneNum: String) {
+    private var mView: CallHeaderContract.View = view
+
+    private var mCallId: String? = null
+
+    override fun queryLocalContactInfo(context: Context, phoneNum: String) {
         ContactUtils.getContentCallLog(context, phoneNum) {
-            if (_isDestroyed()) {
+            if (mView == null) {
                 return@getContentCallLog
             }
-            getView()?.onQueryLocalContactInfoSuccessful(it)
+            mView.onQueryLocalContactInfoSuccessful(it)
         }
     }
 
-    inline fun queryPhoneInfo(phoneNum: String) {
+    override fun queryPhoneInfo(phoneNum: String) {
         PhoneNumberManager.getStageTaskList(phoneNum, object : PhoneNumberManager.OnPhoneListener {
-            @SuppressLint("SetTextI18n")
-            override fun onSuccess(phoneMsg: PhoneMsg?) {
-                if (_isDestroyed()) {
+
+            override fun onSuccess(obj: PhoneMsg?) {
+                if (mView == null) {
                     return
                 }
-                getView()?.onQueryPhoneInfoSuccessful(phoneMsg?.city, phoneMsg?.type)
+                mView.onQueryPhoneInfoSuccessful(obj?.city, obj?.type)
             }
 
             override fun onFailed(code: Int?, errorMsg: String?) {
@@ -53,7 +56,7 @@ class CallHeaderPresenter {
         })
     }
 
-    fun formatPhoneNumber(phoneNum: String?): String? {
+    override fun formatPhoneNumber(phoneNum: String?): String? {
         return phoneNum?.let {
             if (it.length == 11) {
                 it.substring(0, 3) +
@@ -63,7 +66,12 @@ class CallHeaderPresenter {
         } ?: phoneNum
     }
 
-    fun startTimer(callId: String) {
+
+    override fun startTimer(callId: String?) {
+        if (callId == null) {
+            return
+        }
+        mCallId = callId
         if (!mCalling.containsKey(callId)) {
             mCalling[callId] = 0
         }
@@ -76,8 +84,8 @@ class CallHeaderPresenter {
                         it.setValue(it.value + 1)
                     }
                 }
-                if (!_isDestroyed()) {
-                    getView()?.updateCallingTime(callId, formatCallingTime(mCalling[callId] ?: 0))
+                if (mView!=null) {
+                    mView.updateCallingTime(callId, formatCallingTime(mCalling[callId] ?: 0))
                     mHandler.postDelayed(this, 1000)
                     return
                 }
@@ -85,18 +93,18 @@ class CallHeaderPresenter {
         })
     }
 
-    fun removeTime(callId: String?) {
+    override fun removeTime(callId: String?) {
         callId?.let {
             mCalling.remove(it)
         }
     }
 
-    fun stopTimer(callId: String?) {
+    override fun stopTimer(callId: String?) {
         removeTime(callId)
         mHandler.removeCallbacksAndMessages(null)
     }
 
-    private inline fun formatCallingTime(second: Int) : String {
+    private inline fun formatCallingTime(second: Int): String {
         val hour = second / 3600
         val minute = second % 3600 / 60
         val second = second % 60
@@ -107,6 +115,17 @@ class CallHeaderPresenter {
         return sb.append(String.format("%02d:", minute))
                 .append(String.format("%02d", second))
                 .toString()
+    }
+
+    override fun attachView(view: CallHeaderContract.View?) {
+        super.attachView(view)
+    }
+
+    override fun detachView() {
+        super.detachView()
+        if(mCallId != null){
+            stopTimer(mCallId)
+        }
     }
 
 }

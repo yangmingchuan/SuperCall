@@ -6,7 +6,7 @@ package com.maiya.call.base
  * @Description
  */
 
-class BasePresenter<T : BaseView> : BasePre<T> {
+open class BasePresenter<T : BaseView> : BasePre<T> {
     private  var mView: T? = null
 
     override fun detachView() {
