@@ -1,14 +1,8 @@
-package com.preface.megatron.tel.manager
+package com.maiya.call.phone.manager
 
 import com.maiya.call.phone.bean.PhoneMsg
 import com.maiya.call.phone.mode.Callback
 import com.maiya.call.phone.mode.PhoneModel
-import com.preface.megatron.common.bean.PhoneMsg
-import com.preface.megatron.tel.model.PhoneModel
-import com.qsmy.business.app.base.model.Callback
-import com.qsmy.lib.common.utils.Utils
-import java.lang.ref.WeakReference
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * 电话管理类

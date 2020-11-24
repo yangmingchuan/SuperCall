@@ -1,6 +1,5 @@
 package com.maiya.call.phone.presenter
 
-import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
@@ -10,7 +9,7 @@ import com.maiya.call.base.BasePresenter
 import com.maiya.call.phone.bean.PhoneMsg
 import com.maiya.call.phone.utils.ContactUtils
 import com.maiya.call.phone.view.callheader.CallHeaderContract
-import com.preface.megatron.tel.manager.PhoneNumberManager
+import com.maiya.call.phone.manager.PhoneNumberManager
 import java.util.concurrent.ConcurrentHashMap
 
 /**

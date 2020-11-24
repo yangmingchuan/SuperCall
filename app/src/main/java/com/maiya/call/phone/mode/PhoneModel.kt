@@ -11,18 +11,19 @@ import com.maiya.call.phone.bean.PhoneMsg
 object PhoneModel : BaseModel() {
 
     fun seachMsgByPhoneNumber(content: String, callBack: Callback<PhoneMsg>?) {
-        val params = mutableMapOf<String, String>().also {
-            it["phone"] = content
-        }
-        HttpUtils.postWithPhpEncrypt(UrlConstants.PHONE_ATTRIBUTION, params, object : RequestDataCallback<ServerPhoneMsg>() {
-            override fun onSuccess(serverData: ServerPhoneMsg?) {
-                    safeCallSuccess(callBack,  BeanTransformUtils.toPhoneMsg(serverData))
-            }
-
-            override fun onFailure(errorMsg: String?) {
-                safeCallFailed(callBack, errorMsg)
-            }
-        })
+        // TODO 根据电话号码获取信息
+//        val params = mutableMapOf<String, String>().also {
+//            it["phone"] = content
+//        }
+//        HttpUtils.postWithPhpEncrypt(UrlConstants.PHONE_ATTRIBUTION, params, object : RequestDataCallback<ServerPhoneMsg>() {
+//            override fun onSuccess(serverData: ServerPhoneMsg?) {
+//                    safeCallSuccess(callBack,  BeanTransformUtils.toPhoneMsg(serverData))
+//            }
+//
+//            override fun onFailure(errorMsg: String?) {
+//                safeCallFailed(callBack, errorMsg)
+//            }
+//        })
     }
 
 }

@@ -20,6 +20,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
 import android.widget.CheckBox
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.maiya.call.MApplication
@@ -27,7 +28,9 @@ import com.maiya.call.R
 import com.maiya.call.phone.interfaces.ICanAddCallChangedListener
 import com.maiya.call.phone.interfaces.IPhoneCallInterface
 import com.maiya.call.phone.manager.PhoneCallManager
+import com.maiya.call.phone.manager.PhoneRecordManager
 import com.maiya.call.util.LogUtils
+import com.yanzhenjie.permission.AndPermission
 import kotlinx.android.synthetic.main.activity_phone_call.*
 
 /**
@@ -316,12 +319,10 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
             toggleRecordStatus(false)
         } else {
             AndPermission.with(this)
-                    .runtime()
                     .permission(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .rationale(RuntimeRationale())
                     .onDenied {
                         if (it.contains(Manifest.permission.RECORD_AUDIO)) {
-                            ToastUtils.showToast("录音开启失败，请检查录音权限")
+                            Toast.makeText(this,"录音开启失败，请检查录音权限",Toast.LENGTH_SHORT).show()
                         }
                     }
                     .onGranted {
