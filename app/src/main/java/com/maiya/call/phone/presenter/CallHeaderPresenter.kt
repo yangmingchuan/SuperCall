@@ -7,7 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import com.maiya.call.base.BasePresenter
 import com.maiya.call.phone.bean.PhoneMsg
-import com.maiya.call.phone.utils.ContactUtils
+import com.maiya.call.phone.manager.ContactManager
 import com.maiya.call.phone.view.callheader.CallHeaderContract
 import com.maiya.call.phone.manager.PhoneNumberManager
 import java.util.concurrent.ConcurrentHashMap
@@ -31,7 +31,7 @@ class CallHeaderPresenter(view: CallHeaderContract.View) : BasePresenter<CallHea
     private var mCallId: String? = null
 
     override fun queryLocalContactInfo(context: Context, phoneNum: String) {
-        ContactUtils.getContentCallLog(context, phoneNum) {
+        ContactManager.getContentCallLog(context, phoneNum) {
             if (mView == null) {
                 return@getContentCallLog
             }

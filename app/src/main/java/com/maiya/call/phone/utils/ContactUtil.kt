@@ -1,8 +1,6 @@
 package com.maiya.call.phone.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.database.Cursor
 import android.provider.ContactsContract
 import com.maiya.call.util.LogUtils
 
@@ -13,7 +11,7 @@ import com.maiya.call.util.LogUtils
  */
 
 object ContactUtil {
-    /**
+    /**¬
      * 根据电话号码获取联系人
      */
     @JvmStatic

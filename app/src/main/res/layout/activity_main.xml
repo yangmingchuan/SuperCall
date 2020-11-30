@@ -14,8 +14,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="测试点击"
-        />
+        android:text="测试点击" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

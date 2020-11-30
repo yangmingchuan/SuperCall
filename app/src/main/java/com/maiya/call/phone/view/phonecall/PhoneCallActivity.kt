@@ -1,4 +1,4 @@
-package com.maiya.call.phone.view
+package com.maiya.call.phone.view.phonecall
 
 import android.Manifest
 import android.app.Activity
@@ -23,18 +23,21 @@ import android.widget.CheckBox
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import com.maiya.call.MApplication
 import com.maiya.call.R
+import com.maiya.call.phone.adapter.CallerKeyboardAdapter
 import com.maiya.call.phone.interfaces.ICanAddCallChangedListener
 import com.maiya.call.phone.interfaces.IPhoneCallInterface
 import com.maiya.call.phone.manager.PhoneCallManager
 import com.maiya.call.phone.manager.PhoneRecordManager
+import com.maiya.call.phone.view.CallHoldView
 import com.maiya.call.util.LogUtils
 import com.yanzhenjie.permission.AndPermission
 import kotlinx.android.synthetic.main.activity_phone_call.*
 
 /**
- *
+ *  接听电话界面
  */
 
 @RequiresApi(api = Build.VERSION_CODES.M)
@@ -93,8 +96,8 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
 
                 //断开连接
                 Call.STATE_DISCONNECTED -> {
-                    if (recordManager.isRecording == true) {
-                        recordManager.stopRecord()
+                    if (recordManager?.isRecording == true) {
+                        recordManager?.stopRecord()
                     }
                     if (PhoneCallManager.instance.getCurrentCallSize() <= 1) {
                         call_hold_container.hide()
@@ -272,17 +275,14 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
                     }
                     val isHolding = PhoneCallManager.instance.isHold(mMainCallId)
                     PhoneCallManager.instance.hold(mMainCallId, !isHolding)
-                    ActiveReportManager.report(activeEvent = ActiveEvent.PHONE_CALL_HOLD_CLICK, view = v)
                 }
                 R.id.cb_recording -> {
 //                onRecordClick()
-                    ToastUtils.showToast("暂未开放")
                     toggleRecordStatus(false)
                 }
                 R.id.cb_speaker -> {
                     val isSpeakPhoneOn = PhoneCallManager.instance.isSpeakPhoneOn()
                     PhoneCallManager.instance.setSpeakPhoneOn(!isSpeakPhoneOn)
-                    ActiveReportManager.report(activeEvent = ActiveEvent.PHONE_CALL_SPEAKER_CLICK, view = v)
                 }
                 R.id.iv_hand_up -> {
                     PhoneCallManager.instance.disconnect(mMainCallId).also {
@@ -295,7 +295,6 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
                 R.id.cb_mute -> {
                     val isMicrophoneMute = PhoneCallManager.instance.isMicrophoneMute()
                     PhoneCallManager.instance.setMicrophoneMute(!isMicrophoneMute)
-                    ActiveReportManager.report(activeEvent = ActiveEvent.PHONE_CALL_MUTE_CLICK, view = v)
                 }
                 else -> {
                 }
@@ -349,16 +348,16 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
 
     private fun toggleCallInView(showCallInView: Boolean) {
         if (showCallInView) {
-            group_caller_hide_keyboard.setVisibilityCompat(View.GONE)
-            group_caller_show_keyboard.setVisibilityCompat(View.GONE)
-            iv_hand_up.setVisibilityCompat(View.GONE)
-            ll_call_in.setVisibilityCompat(View.VISIBLE)
+            group_caller_hide_keyboard.visibility = View.GONE
+            group_caller_show_keyboard.visibility = View.GONE
+            iv_hand_up.visibility = View.GONE
+            ll_call_in.visibility = View.VISIBLE
             startWaveAnimation()
         } else {
-            group_caller_hide_keyboard.setVisibilityCompat(View.VISIBLE)
-            group_caller_show_keyboard.setVisibilityCompat(View.GONE)
-            iv_hand_up.setVisibilityCompat(View.VISIBLE)
-            ll_call_in.setVisibilityCompat(View.GONE)
+            group_caller_hide_keyboard.visibility = View.VISIBLE
+            group_caller_show_keyboard.visibility = View.GONE
+            iv_hand_up.visibility = View.VISIBLE
+            ll_call_in.visibility = View.GONE
             clearWaveAnimation()
         }
     }
@@ -366,22 +365,22 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
     private inline fun showCallerKeyboard() {
         // 显示拨号键盘
         initCallerKeyboardAdapterIfNeeded()
-        group_caller_hide_keyboard.setVisibilityCompat(View.GONE)
-        caller_header_container.setVisibilityCompat(View.GONE)
-        group_caller_show_keyboard.setVisibilityCompat(View.VISIBLE)
-        ll_call_in.setVisibilityCompat(View.GONE)
+        group_caller_hide_keyboard.visibility = View.GONE
+        caller_header_container.visibility = View.GONE
+        group_caller_show_keyboard.visibility = View.VISIBLE
+        ll_call_in.visibility = View.GONE
     }
 
     private inline fun hideCallerKeyboard() {
         // 隐藏拨号键盘
-        group_caller_hide_keyboard.setVisibilityCompat(View.VISIBLE)
-        caller_header_container.setVisibilityCompat(View.VISIBLE)
-        group_caller_show_keyboard.setVisibilityCompat(View.GONE)
-        ll_call_in.setVisibilityCompat(View.GONE)
+        group_caller_hide_keyboard.visibility = View.VISIBLE
+        caller_header_container.visibility = View.VISIBLE
+        group_caller_show_keyboard.visibility = View.GONE
+        ll_call_in.visibility = View.GONE
     }
 
     private inline fun initCallerKeyboardAdapterIfNeeded() {
-        if (!Utils.isEmpty(mCallerKeyboardAdapter) && !Utils.isEmpty(rv_caller_keyboard.adapter)) {
+        if (mCallerKeyboardAdapter !=null && rv_caller_keyboard.adapter!=null) {
             return
         }
         mCallerKeyboardAdapter = CallerKeyboardAdapter().also {

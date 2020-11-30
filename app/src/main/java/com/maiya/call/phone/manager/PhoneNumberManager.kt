@@ -13,7 +13,7 @@ import com.maiya.call.phone.mode.PhoneModel
  */
 
 object PhoneNumberManager {
-    private var phoneMsg :PhoneMsg? = null
+    private var phoneMsg: PhoneMsg? = null
 
     /**
      * 根据电话号码 获取电话归属地和 运行商信息
@@ -21,7 +21,7 @@ object PhoneNumberManager {
     @JvmStatic
     @JvmOverloads
     fun getStageTaskList(number: String, listener: OnPhoneListener? = null) {
-        PhoneModel.seachMsgByPhoneNumber(number, object : Callback<PhoneMsg> {
+        PhoneModel.searchMsgByPhoneNumber(number, object : Callback<PhoneMsg> {
             override fun onSuccess(response: PhoneMsg?) {
                 if (null == response) {
                     return

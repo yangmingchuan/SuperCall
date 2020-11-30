@@ -177,7 +177,7 @@
         app:constraint_referenced_ids="tv_key_input_content
         , rv_caller_keyboard, tv_hide_keyboard" />
 
-    <CallHoldView
+    <com.maiya.call.phone.view.CallHoldView
         android:id="@+id/call_hold_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

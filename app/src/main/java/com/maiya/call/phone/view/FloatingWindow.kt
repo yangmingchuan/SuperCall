@@ -194,7 +194,7 @@ class FloatingWindow(context: Context?, videoLink: String?, callListener: IPhone
     private fun initPhoneView(phoneNumber: String?) {
         phoneNumber?.let {
             val numberPerson = ContactUtil.getContentCallLog(mContext, it)
-            if (numberPerson != null) tvCallNumber.text = numberPerson
+            if (numberPerson != null) tvCallNumber.text = numberPerson.toString()
             else tvCallNumber.text = it.let { PhoneUtil.formatPhoneNumber(it) }
 
             val city = MobileNumberUtils.getGeo(phoneNumber)

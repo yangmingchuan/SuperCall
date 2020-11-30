@@ -1,9 +1,13 @@
-package com.maiya.call.phone.utils;
+package com.maiya.call.phone.manager;
 
 import android.content.Context;
 import android.os.Looper;
 
-public class ContactUtils {
+import com.maiya.call.phone.utils.ContactUtil;
+import com.maiya.call.phone.utils.ThreadManager;
+import com.ymc.ijkplay.utils.AppHandlerUtil;
+
+public class ContactManager {
 
     public static void getContentCallLog(Context mContext, String number, Callback callBack) {
         ThreadManager.execute(() -> {

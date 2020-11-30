@@ -8,7 +8,6 @@ import android.provider.ContactsContract
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.maiya.call.R
-import com.maiya.call.phone.utils.MobileNumberUtils
 import com.maiya.call.util.LogUtils
 
 
@@ -27,8 +26,6 @@ class PhoneListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_phone_list)
         getConName()
         getContentCallLog()
-        LogUtils.e("运营商 ： ${MobileNumberUtils.getCarrier(this,"17621066329",86)}")
-        LogUtils.e("归属地：${MobileNumberUtils.getGeo("17621066329")}")
     }
 
     private val projection = arrayOf(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER)
@@ -75,8 +72,6 @@ class PhoneListActivity : AppCompatActivity() {
         }
         cursor.close()
     }
-
-
 
 
 }

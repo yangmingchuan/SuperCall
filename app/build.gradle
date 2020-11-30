@@ -59,7 +59,7 @@ dependencies {
     implementation 'com.googlecode.libphonenumber:geocoder:2.99'
     implementation 'com.googlecode.libphonenumber:prefixmapper:2.109'
 
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     testImplementation 'org.testng:testng:6.9.6'
 }
