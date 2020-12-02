@@ -31,6 +31,8 @@ import com.maiya.call.phone.interfaces.ICanAddCallChangedListener
 import com.maiya.call.phone.interfaces.IPhoneCallInterface
 import com.maiya.call.phone.manager.PhoneCallManager
 import com.maiya.call.phone.manager.PhoneRecordManager
+import com.maiya.call.phone.utils.DoubleClickUtil
+import com.maiya.call.phone.utils.ExitAppHelper
 import com.maiya.call.phone.view.CallHoldView
 import com.maiya.call.util.LogUtils
 import com.yanzhenjie.permission.AndPermission
@@ -123,9 +125,12 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
         if (mSensor != null) {
             mSensorManager?.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL)
         }
+        initView()
+        initData()
+        setViewListener()
     }
 
-    override fun initView(savedInstanceState: Bundle?) {
+    private fun initView() {
         val uiOptions = (View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION //hide navigationBar
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -137,10 +142,14 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
         } else {
             window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
         }
-        // turn on and unlock screen
-        window?.let {
-            presenter?.showOnLockScreen(it)
-        }
+        window.setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                WindowManager.LayoutParams.FLAG_FULLSCREEN or
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON or
+                        WindowManager.LayoutParams.FLAG_FULLSCREEN or
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
         call_hold_container.callSwitchListener = object : CallHoldView.CallSwitchListener {
             override fun onCallSwitch(callId: String) {
                 mSubCallId = mMainCallId
@@ -151,7 +160,7 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
         }
     }
 
-    override fun initData(savedInstanceState: Bundle?) {
+    private fun initData() {
         PhoneCallManager.instance.registerCanAddCallChangedListener(this)
         parseIntent(intent)
         initCall(true)
@@ -165,20 +174,16 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
 
     private inline fun parseIntent(intent: Intent?) {
         intent?.let {
-            if (Utils.isEmpty(mMainCallId)) {
-                isForeground = it.getBooleanExtra(EXTRA_IS_FOREGROUND, false)
-            }
             mMainCallId = it.getStringExtra(EXTRA_MAIN_CALL_ID) ?: ""
             mSubCallId = it.getStringExtra(EXTRA_SUB_CALL_ID)
         }
     }
 
     override fun onCanAddCallChanged(canAddCall: Boolean) {
-        LogUtils.e("canAddCall: $canAddCall")
         updateActionState(canAddCall)
     }
 
-    override fun setViewListener() {
+    private fun setViewListener() {
         ll_call_in?.findViewById<View>(R.id.tv_phone_hang_up)?.setOnClickListener(this)
         ll_call_in?.findViewById<View>(R.id.tv_phone_pick_up)?.setOnClickListener(this)
         tv_add_call.setOnClickListener(this)
@@ -216,10 +221,6 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
 
     }
 
-    override fun isFitsSystemWindows(): Boolean {
-        return false
-    }
-
     override fun onDestroy() {
         caller_header_container.unbindInfo()
         PhoneCallManager.instance.unregisterCallStateListener(mMainCallId, mCallStateListener)
@@ -234,7 +235,6 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
         }
         mWakeLock = null
         super.onDestroy()
-        LogUtils.e("onDestroy:", "xsw")
     }
 
     override fun finishAndRemoveTask() {
@@ -251,7 +251,7 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
                     checkBox.isChecked = !checkBox.isChecked
                 }
             }
-            if (!DoubleClickUtil.isCommonClick()) {
+            if (!DoubleClickUtil.isCommonClick) {
                 updateActionState()
                 return
             }
@@ -321,7 +321,7 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
                     .permission(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     .onDenied {
                         if (it.contains(Manifest.permission.RECORD_AUDIO)) {
-                            Toast.makeText(this,"录音开启失败，请检查录音权限",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "录音开启失败，请检查录音权限", Toast.LENGTH_SHORT).show()
                         }
                     }
                     .onGranted {
@@ -337,7 +337,7 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
     }
 
     private inline fun checkFinish() {
-        if (!Utils.isEmpty(mSubCallId)) {
+        if (mSubCallId !=null) {
             mMainCallId = mSubCallId!!
             mSubCallId = null
             initCall(false)
@@ -380,15 +380,13 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
     }
 
     private inline fun initCallerKeyboardAdapterIfNeeded() {
-        if (mCallerKeyboardAdapter !=null && rv_caller_keyboard.adapter!=null) {
+        if (mCallerKeyboardAdapter != null && rv_caller_keyboard.adapter != null) {
             return
         }
         mCallerKeyboardAdapter = CallerKeyboardAdapter().also {
             it.setOnItemClickListener { adapter, _, position ->
                 val item = adapter.getItem(position) as CallerKeyboardAdapter.CallerKeyboard
-                if (Utils.isEmpty(item)) {
-                    return@setOnItemClickListener
-                }
+                        ?: return@setOnItemClickListener
                 tv_key_input_content.text = "${tv_key_input_content.text}${item.digit}"
                 PhoneCallManager.instance.playNumberTone(mMainCallId, item.digit)
             }

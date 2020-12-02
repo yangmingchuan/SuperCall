@@ -36,7 +36,6 @@ class CallHeaderView @JvmOverloads constructor(
 
     private val mCallStateListener = object : IPhoneCallInterface {
         override fun onCallStateChanged(call: Call?, state: Int) {
-            LogUtils.e("header: call state = $state, callId = $mCallId", "xsw")
             when (state) {
                 //正在呼叫(呼出)
                 Call.STATE_DIALING -> {
@@ -107,6 +106,10 @@ class CallHeaderView @JvmOverloads constructor(
 
         presenter?.queryLocalContactInfo(context, phoneNumber)
         presenter?.queryPhoneInfo(phoneNumber)
+    }
+
+    fun unbindInfo() {
+        presenter?.stopTimer(mCallId)
     }
 
     override fun onQueryLocalContactInfoSuccessful(info: ContactUtil.ContactInfo?) {
