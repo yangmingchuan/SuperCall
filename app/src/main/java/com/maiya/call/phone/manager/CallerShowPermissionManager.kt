@@ -67,6 +67,7 @@ class CallerShowPermissionManager private constructor() {
         }
         try {
             AndPermission.with(MApplication().getInstance())
+                    .runtime()
                     .permission(permissions)
                     .onGranted {
                         callSuccess(callBack)

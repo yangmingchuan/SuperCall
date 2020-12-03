@@ -13,12 +13,12 @@ import java.io.ObjectOutputStream
 import java.util.*
 
 object CacheUtils {
-    private const val SP_NAME = "pig"
+    private const val SP_NAME = "super_call"
     const val KEY_SET_RING_TYPE = "key_set_ring_type"
     const val TYPE_RING_VIDEO = "video"
 
     private val sp: SharedPreferences by lazy {
-        MApplication().getInstance().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
+        MApplication().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
     }
 
     const val SP_FILE_KEY = "sp_video_key"

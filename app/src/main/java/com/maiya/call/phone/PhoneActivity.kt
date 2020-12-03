@@ -20,6 +20,7 @@ import com.maiya.call.util.file.download.FileDownloadCallback
 import com.maiya.call.util.file.download.FileDownloadRequest
 import com.maiya.call.util.file.download.FileDownloadTask
 import com.yanzhenjie.permission.AndPermission
+import com.yanzhenjie.permission.runtime.Permission
 import kotlinx.android.synthetic.main.activity_phone.*
 import java.io.File
 
@@ -131,20 +132,18 @@ class PhoneActivity : AppCompatActivity() {
      */
     private fun requestPermission() {
         AndPermission.with(this)
-                .permission(Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.MODIFY_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.WRITE_CALL_LOG, Manifest.permission.WAKE_LOCK
+                .runtime()
+                .permission(
+                        Permission.Group.PHONE,
+                        Permission.Group.LOCATION,
+                        Permission.Group.CALL_LOG
                 )
                 .onGranted {
                     Toast.makeText(applicationContext, "权限同意", Toast.LENGTH_SHORT).show()
                 }.onDenied {
-                    if (AndPermission.hasAlwaysDeniedPermission(applicationContext, it)) {
-                        //AndPermission.permissionSetting(applicationContext).execute();
-                    }
                     Toast.makeText(applicationContext, "权限拒绝", Toast.LENGTH_SHORT).show()
                 }.start()
 
     }
-
 
 }

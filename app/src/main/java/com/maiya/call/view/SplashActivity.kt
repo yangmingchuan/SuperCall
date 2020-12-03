@@ -33,6 +33,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun requestPermission() {
         AndPermission.with(this)
+                .runtime()
                 .permission(Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.CALL_PHONE,
@@ -42,9 +43,6 @@ class SplashActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext,"权限同意",Toast.LENGTH_SHORT).show()
                     init()
                 }.onDenied{
-                    if (AndPermission.hasAlwaysDeniedPermission(applicationContext,it)){
-                        AndPermission.permissionSetting(applicationContext).execute();
-                    }
                     Toast.makeText(applicationContext,"权限拒绝",Toast.LENGTH_SHORT).show()
                 }.start()
     }

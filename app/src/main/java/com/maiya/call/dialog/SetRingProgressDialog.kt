@@ -4,6 +4,10 @@ import android.content.Context
 import com.maiya.call.R
 import com.maiya.call.widget.ArcProgressBar
 
+/**
+ * 设置视频铃声进度dialog
+ */
+
 class SetRingProgressDialog(context: Context) : DelegateDialog(context, R.style.SetRingProgressDialog) {
 
     private lateinit var progressBar: ArcProgressBar

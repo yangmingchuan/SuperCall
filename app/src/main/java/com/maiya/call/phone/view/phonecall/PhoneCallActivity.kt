@@ -36,6 +36,7 @@ import com.maiya.call.phone.utils.ExitAppHelper
 import com.maiya.call.phone.view.CallHoldView
 import com.maiya.call.util.LogUtils
 import com.yanzhenjie.permission.AndPermission
+import com.yanzhenjie.permission.runtime.Permission
 import kotlinx.android.synthetic.main.activity_phone_call.*
 
 /**
@@ -318,7 +319,8 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
             toggleRecordStatus(false)
         } else {
             AndPermission.with(this)
-                    .permission(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .runtime()
+                    .permission(Permission.RECORD_AUDIO, Permission.WRITE_EXTERNAL_STORAGE)
                     .onDenied {
                         if (it.contains(Manifest.permission.RECORD_AUDIO)) {
                             Toast.makeText(this, "录音开启失败，请检查录音权限", Toast.LENGTH_SHORT).show()
