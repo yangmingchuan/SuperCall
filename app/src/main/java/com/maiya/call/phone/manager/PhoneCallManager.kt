@@ -10,7 +10,7 @@ import android.telecom.TelecomManager
 import android.telecom.VideoProfile
 import android.text.TextUtils
 import androidx.annotation.RequiresApi
-import com.maiya.call.MApplication
+import com.maiya.call.App
 import com.maiya.call.phone.interfaces.ICanAddCallChangedListener
 import com.maiya.call.phone.interfaces.IPhoneCallInterface
 import com.maiya.call.phone.service.PhoneCallService
@@ -43,7 +43,7 @@ class PhoneCallManager private constructor() {
     }
 
     init {
-        audioManager = MApplication().getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        audioManager = App.context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
     }
 
     fun hasDefaultCall(): Boolean = !mCallList.isNullOrEmpty()
@@ -79,7 +79,7 @@ class PhoneCallManager private constructor() {
         }
 
         val isForeground = GlobalActivityLifecycleMonitor.isAppOnForeground()
-        PhoneCallActivity.actionStart(MApplication(), callId, isForeground)
+        PhoneCallActivity.actionStart(App.context, callId, isForeground)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -307,8 +307,8 @@ class PhoneCallManager private constructor() {
     fun getSlotIcon(callId: String?) =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 getCallById(callId)?.let {
-                    val telecomsManager = MApplication().getSystemService(Context.TELECOM_SERVICE) as? TelecomManager
-                    telecomsManager?.getPhoneAccount(it.details.accountHandle)?.icon?.loadDrawable(MApplication())
+                    val telecomsManager = App.context.getSystemService(Context.TELECOM_SERVICE) as? TelecomManager
+                    telecomsManager?.getPhoneAccount(it.details.accountHandle)?.icon?.loadDrawable(App.context)
                 }
             } else null
 
@@ -316,16 +316,16 @@ class PhoneCallManager private constructor() {
      * 是否支持设为默认电话应用
      */
     fun isEnableToChangeDefaultPhoneCallApp() =
-            buildSetDefaultPhoneCallAppIntent()?.resolveActivity(MApplication().packageManager) != null
+            buildSetDefaultPhoneCallAppIntent()?.resolveActivity(App.context.packageManager) != null
 
     /**
      * 判断是否是默认电话应用
      */
     fun isDefaultPhoneCallApp(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val manger = MApplication().getSystemService(Context.TELECOM_SERVICE) as? TelecomManager
+            val manger = App.context.getSystemService(Context.TELECOM_SERVICE) as? TelecomManager
             if (manger != null && manger.defaultDialerPackage != null) {
-                return manger.defaultDialerPackage == MApplication().packageName
+                return manger.defaultDialerPackage == App.context.packageName
             }
         }
         return false
@@ -335,7 +335,7 @@ class PhoneCallManager private constructor() {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             Intent().apply {
                 action = TelecomManager.ACTION_CHANGE_DEFAULT_DIALER
-                putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, MApplication().packageName)
+                putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, App.context.packageName)
             } else null
     }
 
@@ -346,7 +346,7 @@ class PhoneCallManager private constructor() {
         // 发起将本应用设为默认电话应用的请求，仅支持 Android M 及以上
         return buildSetDefaultPhoneCallAppIntent()?.let {
             it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            MApplication().startActivity(it)
+            App.context.startActivity(it)
             true
         } ?: false
     }
@@ -359,7 +359,7 @@ class PhoneCallManager private constructor() {
     /**
      * 添加一个通话
      */
-    fun addOneMoreCall(context: Context? = MApplication()): Boolean {
+    fun addOneMoreCall(context: Context? = App.context): Boolean {
         if (!canAddCall()) {
             return false
         }

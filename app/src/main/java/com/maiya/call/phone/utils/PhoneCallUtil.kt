@@ -15,7 +15,7 @@ import android.util.Log
 import android.view.KeyEvent
 import androidx.core.app.ActivityCompat
 import com.android.internal.telephony.ITelephony
-import com.maiya.call.MApplication
+import com.maiya.call.App
 import com.maiya.call.phone.service.NotificationService
 import java.lang.reflect.Method
 
@@ -36,8 +36,8 @@ object PhoneCallUtil {
      */
     fun answer() {
         if (Build.VERSION.SDK_INT >= 28) {
-            val telecomManager = MApplication().getInstance().getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-            if (ActivityCompat.checkSelfPermission(MApplication().getInstance(),
+            val telecomManager = App.context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
+            if (ActivityCompat.checkSelfPermission(App.context,
                             Manifest.permission.ANSWER_PHONE_CALLS) != PackageManager.PERMISSION_GRANTED) {
                 return
             }
@@ -60,9 +60,9 @@ object PhoneCallUtil {
     private fun finalAnswer() {
         try {
             if (Build.VERSION.SDK_INT >= 21) {
-                val mediaSessionManager = MApplication().getInstance().getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+                val mediaSessionManager = App.context.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
                 val activeSessions = mediaSessionManager.getActiveSessions(
-                        ComponentName(MApplication().getInstance(), NotificationService::class.java)) as List<MediaController>
+                        ComponentName(App.context, NotificationService::class.java)) as List<MediaController>
                 if (activeSessions.isNotEmpty()) {
                     for (mediaController in activeSessions) {
                         if ("com.android.server.telecom" == mediaController.packageName) {
@@ -84,8 +84,8 @@ object PhoneCallUtil {
     fun disconnect() {
 
         if (Build.VERSION.SDK_INT >= 28) {
-            val telecomManager = MApplication().getInstance().getSystemService(Context.TELECOM_SERVICE) as TelecomManager
-            if (ActivityCompat.checkSelfPermission(MApplication().getInstance(), Manifest.permission.ANSWER_PHONE_CALLS) != PackageManager.PERMISSION_GRANTED) {
+            val telecomManager = App.context.getSystemService(Context.TELECOM_SERVICE) as TelecomManager
+            if (ActivityCompat.checkSelfPermission(App.context, Manifest.permission.ANSWER_PHONE_CALLS) != PackageManager.PERMISSION_GRANTED) {
                 return
             }
             telecomManager.endCall()
@@ -124,7 +124,7 @@ object PhoneCallUtil {
     var call: Call? = null
 
     init {
-        audioManager = MApplication().getInstance().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager = App.context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
 

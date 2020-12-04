@@ -2,7 +2,7 @@ package com.maiya.call.phone.manager
 
 import android.media.MediaRecorder
 import android.widget.Toast
-import com.maiya.call.MApplication
+import com.maiya.call.App
 import com.maiya.call.phone.utils.ThreadManager
 import com.maiya.call.util.file.FileUtils
 import com.ymc.ijkplay.utils.AppHandlerUtil
@@ -35,7 +35,7 @@ class PhoneRecordManager(private val number: String) {
                 tryDefaultWayRecord()
                 true
             } catch (e: Exception) {
-                Toast.makeText(MApplication(),"录音开启失败，设备可能被占用",Toast.LENGTH_SHORT).show()
+                Toast.makeText(App.context,"录音开启失败，设备可能被占用",Toast.LENGTH_SHORT).show()
                 mFile?.delete()
                 isRecording = false
                 false
@@ -53,7 +53,7 @@ class PhoneRecordManager(private val number: String) {
                     destroyMediaRecorder()
                     isRecording = false
                     AppHandlerUtil.runInUiThread {
-                        Toast.makeText(MApplication(), "\"录音文件保存在${mFile?.parent}目录下\"", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(App.context, "\"录音文件保存在${mFile?.parent}目录下\"", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
                     getMediaRecorder()?.release()
@@ -122,7 +122,7 @@ class PhoneRecordManager(private val number: String) {
     private fun getRecordFilePath(): String? {
         var recordDir = FileUtils.getExternalStorageDirFile()
         if (recordDir == null) {
-            recordDir = FileUtils.getExternalFilesDirectory(MApplication(), RECORD_FILE_TYPE)
+            recordDir = FileUtils.getExternalFilesDirectory(App.context, RECORD_FILE_TYPE)
         }
         if (recordDir == null) {
             return ""

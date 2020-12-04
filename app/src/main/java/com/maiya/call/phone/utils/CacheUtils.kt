@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.text.TextUtils
 import android.util.Base64
-import com.maiya.call.MApplication
+import com.maiya.call.App
 import org.json.JSONObject
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -18,7 +18,7 @@ object CacheUtils {
     const val TYPE_RING_VIDEO = "video"
 
     private val sp: SharedPreferences by lazy {
-        MApplication().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
+        App.context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
     }
 
     const val SP_FILE_KEY = "sp_video_key"

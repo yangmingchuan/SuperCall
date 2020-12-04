@@ -1,6 +1,6 @@
 package com.maiya.call.phone.mode
 
-import com.maiya.call.MApplication
+import com.maiya.call.App
 import com.maiya.call.phone.bean.PhoneMsg
 import com.maiya.call.phone.utils.MobileNumberUtils
 
@@ -15,7 +15,7 @@ object PhoneModel : BaseModel() {
     fun searchMsgByPhoneNumber(content: String, callBack: Callback<PhoneMsg>?) {
         var pm = PhoneMsg()
         pm.city = MobileNumberUtils.getGeo(content)
-        pm.type = MobileNumberUtils.getCarrier(MApplication(), content, 86)
+        pm.type = MobileNumberUtils.getCarrier(App.context, content, 86)
         safeCallSuccess(callBack, pm)
 
     }

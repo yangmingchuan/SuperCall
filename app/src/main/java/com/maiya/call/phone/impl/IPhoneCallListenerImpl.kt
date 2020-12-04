@@ -2,7 +2,7 @@ package com.maiya.call.phone.impl
 
 import android.content.Intent
 import android.util.Log
-import com.maiya.call.MApplication
+import com.maiya.call.App
 import com.maiya.call.phone.interfaces.IPhoneCallListener
 import com.maiya.call.phone.service.CallListenerService
 import com.maiya.call.phone.utils.PhoneCallUtil
@@ -13,7 +13,7 @@ import java.lang.Exception
 class IPhoneCallListenerImpl : IPhoneCallListener {
 
     override fun onAnswer() {
-        val mContext = MApplication().getInstance()
+        val mContext = App.context
         try {
             val intent = Intent(mContext, ForegroundActivity::class.java)
             intent.action = CallListenerService.ACTION_PHONE_CALL
@@ -32,7 +32,7 @@ class IPhoneCallListenerImpl : IPhoneCallListener {
 
     override fun onDisconnect() {
         Log.e("ymc"," onDisconnect")
-        val mContext = MApplication().getInstance()
+        val mContext = App.context
         try {
             val intent = Intent(mContext, ForegroundActivity::class.java)
             intent.action = CallListenerService.ACTION_PHONE_CALL

@@ -9,7 +9,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import com.maiya.call.MApplication
+import com.maiya.call.App
 import com.maiya.call.permission.OpPermissionUtils
 import com.maiya.call.permission.rom.MiuiUtils
 import com.maiya.call.permission.rom.RomUtils
@@ -66,7 +66,7 @@ class CallerShowPermissionManager private constructor() {
             return
         }
         try {
-            AndPermission.with(MApplication().getInstance())
+            AndPermission.with(App.context)
                     .runtime()
                     .permission(permissions)
                     .onGranted {

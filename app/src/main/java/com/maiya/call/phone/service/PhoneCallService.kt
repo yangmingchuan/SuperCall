@@ -6,7 +6,7 @@ import android.telecom.Call
 import android.telecom.CallAudioState
 import android.telecom.InCallService
 import androidx.annotation.RequiresApi
-import com.maiya.call.MApplication
+import com.maiya.call.App
 import com.maiya.call.phone.manager.PhoneCallManager
 
 /**
@@ -23,10 +23,10 @@ class PhoneCallService : InCallService() {
         const val ACTION_MUTE_OFF = "action_mute_off"
 
         fun startService(action: String?) {
-            val intent = Intent(MApplication(), PhoneCallService::class.java).apply {
+            val intent = Intent(App.context, PhoneCallService::class.java).apply {
                 this.action = action
             }
-            MApplication().startService(intent)
+            App.context.startService(intent)
         }
     }
 

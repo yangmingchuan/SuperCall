@@ -3,7 +3,7 @@ package com.maiya.call.phone.utils
 import android.app.Activity
 import android.util.Log
 import android.widget.Toast
-import com.maiya.call.MApplication
+import com.maiya.call.App
 import kotlin.math.abs
 
 /**
@@ -21,7 +21,7 @@ object ExitAppHelper {
     @JvmStatic
     fun checkExit() : Boolean {
         if (abs(System.currentTimeMillis() - exitTime) > 2000) {
-            Toast.makeText(MApplication(),"再按一次退出程序",Toast.LENGTH_SHORT).show()
+            Toast.makeText(App.context,"再按一次退出程序",Toast.LENGTH_SHORT).show()
             exitTime = System.currentTimeMillis()
             return false
         }

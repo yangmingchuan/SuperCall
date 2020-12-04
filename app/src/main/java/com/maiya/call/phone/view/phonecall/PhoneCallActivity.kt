@@ -24,7 +24,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import com.maiya.call.MApplication
+import com.maiya.call.App
 import com.maiya.call.R
 import com.maiya.call.phone.adapter.CallerKeyboardAdapter
 import com.maiya.call.phone.interfaces.ICanAddCallChangedListener
@@ -115,11 +115,11 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_phone_call)
-        mSensorManager = MApplication().getSystemService(Context.SENSOR_SERVICE) as? SensorManager
+        mSensorManager = App.context.getSystemService(Context.SENSOR_SERVICE) as? SensorManager
         if (mSensorManager != null) {
             mSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_PROXIMITY)
         }
-        val powerManager = MApplication().getSystemService(Context.POWER_SERVICE) as? PowerManager
+        val powerManager = App.context.getSystemService(Context.POWER_SERVICE) as? PowerManager
         if (powerManager != null) {
             mWakeLock = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "cs:phoneCallActivityTag")
         }

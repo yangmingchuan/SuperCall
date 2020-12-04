@@ -12,7 +12,10 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -61,6 +64,11 @@ dependencies {
 
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
+
     testImplementation 'org.testng:testng:6.9.6'
 }
 

@@ -15,7 +15,7 @@ import android.widget.RemoteViews;
 
 import androidx.core.app.NotificationCompat;
 
-import com.maiya.call.MApplication;
+import com.maiya.call.App;
 import com.maiya.call.R;
 import com.maiya.call.phone.receiver.NotificationBroadcast;
 import com.maiya.call.phone.utils.NotificationUtil;
@@ -98,7 +98,7 @@ public class CustomNotifyManager {
 
             if (notShieldPhone()) {
                 // 暂时用同样的布局
-                if (NotificationUtil.isDarkNotificationTheme(new MApplication().getInstance())) {
+                if (NotificationUtil.isDarkNotificationTheme(App.instance)) {
                     remoteViews = new RemoteViews(context.getPackageName(),
                             R.layout.layout_item_notification);
                 } else {
