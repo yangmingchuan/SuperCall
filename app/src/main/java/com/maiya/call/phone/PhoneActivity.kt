@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,7 @@ import java.io.File
 @RequiresApi(Build.VERSION_CODES.M)
 class PhoneActivity : AppCompatActivity() {
     private var setRingDialog: SetRingProgressDialog? = null
+    var dialog: RingPermissionDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,11 +53,15 @@ class PhoneActivity : AppCompatActivity() {
             startActivity(intent)
         }
         tv_set_ring.setOnClickListener{
-            val dialog = RingPermissionDialog(this)
-            dialog.getRingVideoPermission(this,object :CallerShowManager.OnPerManagerListener{
+            dialog = RingPermissionDialog(this)
+            dialog?.getRingVideoPermission(this,object :CallerShowManager.OnPerManagerListener{
                 override fun onGranted() {
-                    dialog.show()
-                    updateRingPerContent(dialog)
+                    val content: String = dialog!!.updateRingPerContent()
+                    if(TextUtils.isEmpty(content)){
+                        Toast.makeText(applicationContext, "权限全部同意，正在设置视频铃声", Toast.LENGTH_SHORT).show()
+                        return
+                    }
+                    dialog?.show()
                 }
 
                 override fun onDenied() {
@@ -66,12 +72,19 @@ class PhoneActivity : AppCompatActivity() {
         }
     }
 
-    fun updateRingPerContent(ringPerDialog: RingPermissionDialog?) {
+    override fun onResume() {
+        super.onResume()
+        updateRingPerContent(dialog)
+    }
+
+    private fun updateRingPerContent(ringPerDialog: RingPermissionDialog?) {
         ringPerDialog?.let {
             if (it.isShowing) {
                 val content: String = it.updateRingPerContent()
-                it.dismiss()
-                downloadFile(FloatingWindowManager.instance.mp4Url)
+                if(TextUtils.isEmpty(content)){
+                    it.dismiss()
+                    downloadFile(FloatingWindowManager.instance.mp4Url)
+                }
             }
         }
     }
