@@ -1,16 +1,17 @@
 package com.maiya.call.phone
 
-import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.maiya.call.App
 import com.maiya.call.R
 import com.maiya.call.dialog.RingPermissionDialog
-import com.maiya.call.dialog.SetRingProgressDialog
 import com.maiya.call.phone.manager.CallerShowManager
 import com.maiya.call.phone.manager.FloatingWindowManager
 import com.maiya.call.phone.utils.CacheUtils
@@ -33,7 +34,6 @@ import java.io.File
 
 @RequiresApi(Build.VERSION_CODES.M)
 class PhoneActivity : AppCompatActivity() {
-    private var setRingDialog: SetRingProgressDialog? = null
     var dialog: RingPermissionDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,44 +98,28 @@ class PhoneActivity : AppCompatActivity() {
             private var currentTime: Long = 0
             override fun onStart() {
                 super.onStart()
-                LogUtils.e("视频下载开始")
-                if (setRingDialog == null) {
-                    setRingDialog = SetRingProgressDialog(applicationContext)
-                }
-                setRingDialog?.show()
+                tv_index.text = "视频下载开始"
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onProgress(progress: Int, networkSpeed: Long) {
-                LogUtils.e("视频下载中：$progress")
                 if (currentProgress != progress && System.currentTimeMillis() - currentTime > 100 && progress != 100) {
                     currentTime = System.currentTimeMillis()
                     return
                 }
                 currentProgress = progress
-                setRingDialog?.updateProgress(100, progress)
+                tv_index.text = "视频下载进度：$currentProgress%"
             }
 
             override fun onDone() {
                 super.onDone()
-                LogUtils.e("视频下载完成")
-                setRingDialog?.let {
-                    if ( it.isShowing && !ContextUtils.isDestroyed(it.context)) {
-                        it.dismiss()
-                    }
-                    Toast.makeText(applicationContext, "设置视频铃声成功", Toast.LENGTH_SHORT).show()
-                    CacheUtils.putString(CacheUtils.SP_FILE_KEY, fileu)
-                }
-
+                tv_index.text = "视频下载完成"
+                CacheUtils.putString(CacheUtils.SP_FILE_KEY, fileu)
             }
 
             override fun onFailure() {
                 super.onFailure()
-                setRingDialog?.let {
-                    if (it.isShowing && !ContextUtils.isDestroyed(it.context)) {
-                        it.dismiss()
-                    }
-                }
-                Toast.makeText(applicationContext, "设置视频铃声失败", Toast.LENGTH_SHORT).show()
+                tv_index.text = "设置视频铃声失败"
             }
         })
     }

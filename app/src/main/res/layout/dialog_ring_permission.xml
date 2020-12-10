@@ -78,6 +78,7 @@
         android:layout_below="@+id/ll_permission_parent"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
+        android:background="@drawable/ic_baseline_close_24"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_permission_parent" />

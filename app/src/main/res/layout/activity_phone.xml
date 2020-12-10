@@ -7,6 +7,19 @@
     tools:context=".phone.PhoneActivity">
 
     <TextView
+        android:id="@+id/tv_index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tv_set_ring"
+        android:text="设置进度："
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/holo_blue_bright"
+        />
+
+    <TextView
         android:id="@+id/tv_set_ring"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
