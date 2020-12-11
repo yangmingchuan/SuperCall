@@ -3,8 +3,8 @@ package com.maiya.call.phone.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import com.maiya.call.phone.service.CallListenerService
+import com.maiya.call.phone.service.TaskServiceManager
 
 /**
  * 开机启动
@@ -21,9 +21,12 @@ class AutoStartReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.e("AutoStartReceiver", "AutoStartReceiver")
-        intent!!.setClass(context!!, CallListenerService::class.java)
-        context.startService(intent)
+        val action = intent?.action
+        if (AUTO_START_RECEIVER == action) {
+            context?.let {
+                TaskServiceManager.bindStepService(Intent(it, CallListenerService::class.java))
+            }
+        }
     }
 
 }

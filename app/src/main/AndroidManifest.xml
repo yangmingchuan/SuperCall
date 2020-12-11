@@ -92,9 +92,25 @@
 
         <!-- 电话状态接收广播 -->
         <receiver android:name="com.maiya.call.phone.receiver.PhoneStateReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE" />
+            <intent-filter android:priority="2147483647">
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter android:priority="2147483647">
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+            <intent-filter android:priority="2147483647">
+                <action android:name="android.intent.action.DUAL_PHONE_STATE" />
+            </intent-filter>
+            <intent-filter android:priority="2147483647">
+                <action android:name="android.intent.action.PHONE_STATE_2" />
+            </intent-filter>
+            <intent-filter android:priority="2147483647">
+                <action android:name="com.cootek.smartdialer.action.PHONE_STATE" />
+            </intent-filter>
+            <intent-filter android:priority="2147483647">
+                <action android:name="com.cootek.smartdialer.action.INCOMING_CALL" />
             </intent-filter>
         </receiver>
 
