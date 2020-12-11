@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.maiya.call.phone.service.CallListenerService;
+import com.maiya.call.phone.service.TaskServiceManager;
 
 
 /**
@@ -21,7 +22,6 @@ public class ForegroundActivity extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("ringTong", "ForegroundActivity  onCreate");
         next(getIntent());
     }
 
@@ -33,15 +33,17 @@ public class ForegroundActivity extends FragmentActivity {
 
 
     private void next(Intent intent) {
-        if (intent==null) {
+        if (intent == null) {
             delayFinishSelf();
             return;
         }
-        intent.setAction(CallListenerService.ACTION_PHONE_CALL);
-        intent.setClass(this, CallListenerService.class);
-        startService(intent);
-        Log.e("ringTong", "ForegroundActivity next");
-        delayFinishSelf();
+        try {
+            intent.setAction(CallListenerService.ACTION_PHONE_CALL);
+            intent.setClass(getApplicationContext(), CallListenerService.class);
+            TaskServiceManager.bindStepService(intent);
+            delayFinishSelf();
+        } catch (Exception e) {
+        }
     }
 
     private void delayFinishSelf() {

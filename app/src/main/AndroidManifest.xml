@@ -79,13 +79,19 @@
         <activity android:name="com.maiya.call.view.MainActivity" />
         <activity android:name=".phone.view.phonecall.PhoneCallActivity" />
 
+        <activity
+            android:name=".phone.view.ForegroundActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <!-- 电话service -->
         <service
             android:name="com.maiya.call.phone.service.CallListenerService"
             android:enabled="true"
             android:exported="false">
             <intent-filter android:priority="1000">
-                <action android:name=".phone.manager.CallListenerService" />
+                <action android:name="com.maiya.call.phone.service.CallListenerService" />
             </intent-filter>
 
         </service>
