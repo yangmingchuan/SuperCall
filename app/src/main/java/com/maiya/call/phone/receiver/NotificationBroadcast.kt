@@ -21,7 +21,7 @@ class NotificationBroadcast : BroadcastReceiver() {
         // 判断app是否在前台
         val action = intent.action
         collapseStatusBar(context)
-        if (GlobalActivityLifecycleMonitor.isAppOnForeground()) {
+        if (GlobalActivityLifecycleMonitor.isAppOnForeground) {
             return
         }
         when (action) {

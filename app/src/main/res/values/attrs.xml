@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="ArcProgressBar">
-        <attr name="android:background" />
-        <attr name="useInnerPadding" format="boolean|reference" />
-        <attr name="defProgressColor" format="color|reference" />
-        <attr name="defProgressWidth" format="dimension|reference" />
-        <attr name="currProgressColor" format="color|reference" />
-        <attr name="currProgressWidth" format="dimension|reference" />
-        <attr name="android:textSize" />
-        <attr name="android:textColor" />
-        <attr name="showPercent" format="boolean" />
-    </declare-styleable>
-
     <declare-styleable name="RoundImageView">
         <attr name="android:radius" />
     </declare-styleable>

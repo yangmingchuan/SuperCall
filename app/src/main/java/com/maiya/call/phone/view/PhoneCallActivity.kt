@@ -1,4 +1,4 @@
-package com.maiya.call.phone.view.phonecall
+package com.maiya.call.phone.view
 
 import android.Manifest
 import android.app.Activity
@@ -8,6 +8,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
@@ -31,13 +32,16 @@ import com.maiya.call.phone.interfaces.ICanAddCallChangedListener
 import com.maiya.call.phone.interfaces.IPhoneCallInterface
 import com.maiya.call.phone.manager.PhoneCallManager
 import com.maiya.call.phone.manager.PhoneRecordManager
+import com.maiya.call.phone.utils.CacheUtils
 import com.maiya.call.phone.utils.DoubleClickUtil
 import com.maiya.call.phone.utils.ExitAppHelper
-import com.maiya.call.phone.view.CallHoldView
 import com.maiya.call.util.LogUtils
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.runtime.Permission
+import com.ymc.ijkplay.IRenderView
+import com.ymc.ijkplay.IjkVideoView
 import kotlinx.android.synthetic.main.activity_phone_call.*
+import tv.danmaku.ijk.media.player.IMediaPlayer
 
 /**
  *  接听电话界面
@@ -45,7 +49,7 @@ import kotlinx.android.synthetic.main.activity_phone_call.*
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
-        , SensorEventListener, ICanAddCallChangedListener {
+        , SensorEventListener, ICanAddCallChangedListener, IMediaPlayer.OnCompletionListener  {
 
     companion object {
         private const val EXTRA_MAIN_CALL_ID = "extra_main_call_id"
@@ -197,6 +201,10 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
         tv_hide_keyboard.setOnClickListener(this)
     }
 
+    private var ijkVideoView: IjkVideoView? = null
+    private val mp4Url = "http://smallmv.eastday.com/mv/20200601171315831243932_1.mp4"
+    private var videoLink = CacheUtils.getString(CacheUtils.SP_FILE_KEY, mp4Url)
+
     private fun initCall(isAddCall: Boolean) {
         if (PhoneCallManager.instance.getCallById(mMainCallId) == null) {
             checkFinish()
@@ -219,7 +227,12 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
             recordManager = PhoneRecordManager(phoneNum)
             LogUtils.e("initCall: mMainCallId = $mMainCallId, mSubCallId = $mSubCallId, size = ${getCurrentCallSize()}")
         }
-
+        //视频初始化 并默认填充 fill 模式
+        ijkVideoView = IjkVideoView(this, IRenderView.AR_ASPECT_FILL_PARENT)
+        ijkVideoView?.setOnCompletionListener(this)
+        layout_video_container.addView(ijkVideoView)
+        val uri = Uri.parse("cache:$videoLink")
+        ijkVideoView?.setVideoURI(uri)
     }
 
     override fun onDestroy() {
@@ -339,7 +352,7 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
     }
 
     private inline fun checkFinish() {
-        if (mSubCallId !=null) {
+        if (mSubCallId != null) {
             mMainCallId = mSubCallId!!
             mSubCallId = null
             initCall(false)
@@ -471,5 +484,10 @@ class PhoneCallActivity : AppCompatActivity(), View.OnClickListener
         if (mWakeLock != null && mWakeLock?.isHeld == true) {
             mWakeLock?.release(0)
         }
+    }
+
+    override fun onCompletion(p0: IMediaPlayer?) {
+        ijkVideoView?.start()
+        ijkVideoView?.keepScreenOn = true
     }
 }

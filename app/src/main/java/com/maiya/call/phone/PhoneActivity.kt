@@ -5,18 +5,15 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.maiya.call.App
 import com.maiya.call.R
 import com.maiya.call.dialog.RingPermissionDialog
 import com.maiya.call.phone.manager.CallerShowManager
 import com.maiya.call.phone.manager.FloatingWindowManager
+import com.maiya.call.phone.manager.PhoneCallManager
 import com.maiya.call.phone.utils.CacheUtils
-import com.maiya.call.util.LogUtils
-import com.maiya.call.util.context.ContextUtils
 import com.maiya.call.util.file.UpdateDownloadUtils
 import com.maiya.call.util.file.download.FileDownloadCallback
 import com.maiya.call.util.file.download.FileDownloadRequest
@@ -52,12 +49,12 @@ class PhoneActivity : AppCompatActivity() {
             val intent = Intent(this, PhoneListActivity::class.java)
             startActivity(intent)
         }
-        tv_set_ring.setOnClickListener{
+        tv_set_ring.setOnClickListener {
             dialog = RingPermissionDialog(this)
-            dialog?.getRingVideoPermission(this,object :CallerShowManager.OnPerManagerListener{
+            dialog?.getRingVideoPermission(this, object : CallerShowManager.OnPerManagerListener {
                 override fun onGranted() {
                     val content: String = dialog!!.updateRingPerContent()
-                    if(TextUtils.isEmpty(content)){
+                    if (TextUtils.isEmpty(content)) {
                         Toast.makeText(applicationContext, "权限全部同意，正在设置视频铃声", Toast.LENGTH_SHORT).show()
                         return
                     }
@@ -70,6 +67,14 @@ class PhoneActivity : AppCompatActivity() {
 
             })
         }
+        bt_set_sys_caller.setOnClickListener {
+            if (PhoneCallManager.instance.isDefaultPhoneCallApp()) {
+                Toast.makeText(applicationContext, "已经是默认电话应用...", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this,PlayActivity::class.java))
+                return@setOnClickListener
+            }
+            PhoneCallManager.instance.setDefaultPhoneCallApp()
+        }
     }
 
     override fun onResume() {
@@ -81,7 +86,7 @@ class PhoneActivity : AppCompatActivity() {
         ringPerDialog?.let {
             if (it.isShowing) {
                 val content: String = it.updateRingPerContent()
-                if(TextUtils.isEmpty(content)){
+                if (TextUtils.isEmpty(content)) {
                     it.dismiss()
                     downloadFile(FloatingWindowManager.instance.mp4Url)
                 }
@@ -90,7 +95,7 @@ class PhoneActivity : AppCompatActivity() {
     }
 
     private fun downloadFile(url: String?) {
-        val filePath: String = UpdateDownloadUtils.getApkUpdateFileName(url,this)
+        val filePath: String = UpdateDownloadUtils.getApkUpdateFileName(url, this)
         val fileu = filePath.split(".apk").toTypedArray()[0] + ".mp4"
         val file = File(fileu)
         FileDownloadRequest.download(url, file, FileDownloadTask.DOWN_LOAD_NO_FILTER_TYPE, object : FileDownloadCallback() {

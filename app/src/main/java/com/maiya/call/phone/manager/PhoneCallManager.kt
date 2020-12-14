@@ -15,7 +15,7 @@ import com.maiya.call.phone.interfaces.ICanAddCallChangedListener
 import com.maiya.call.phone.interfaces.IPhoneCallInterface
 import com.maiya.call.phone.service.PhoneCallService
 import com.maiya.call.phone.utils.GlobalActivityLifecycleMonitor
-import com.maiya.call.phone.view.phonecall.PhoneCallActivity
+import com.maiya.call.phone.view.PhoneCallActivity
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArraySet
 
@@ -78,7 +78,7 @@ class PhoneCallManager private constructor() {
             }
         }
 
-        val isForeground = GlobalActivityLifecycleMonitor.isAppOnForeground()
+        val isForeground = GlobalActivityLifecycleMonitor.isAppOnForeground
         PhoneCallActivity.actionStart(App.context, callId, isForeground)
     }
 

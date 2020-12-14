@@ -46,12 +46,12 @@ class CallListenerService : Service() {
     fun forceForeground(intent: Intent) {
         try {
             ContextCompat.startForegroundService(App.context, intent)
-            notification = CustomNotifyManager.getInstance().getNotifyNotification(App.context)
+            notification = CustomNotifyManager.instance?.getNotifyNotification(App.context)
             if (notification != null) {
                 startForeground(CustomNotifyManager.STEP_COUNT_NOTIFY_ID, notification)
             } else {
                 startForeground(CustomNotifyManager.STEP_COUNT_NOTIFY_ID,
-                        CustomNotifyManager.getInstance().getDefaultNotification(NotificationCompat.Builder(App.context)))
+                        CustomNotifyManager.instance?.getDefaultNotification(NotificationCompat.Builder(App.context)))
             }
         } catch (e: Exception) {
         }

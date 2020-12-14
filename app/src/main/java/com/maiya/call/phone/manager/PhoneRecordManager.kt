@@ -35,7 +35,7 @@ class PhoneRecordManager(private val number: String) {
                 tryDefaultWayRecord()
                 true
             } catch (e: Exception) {
-                Toast.makeText(App.context,"录音开启失败，设备可能被占用",Toast.LENGTH_SHORT).show()
+                Toast.makeText(App.context, "录音开启失败，设备可能被占用", Toast.LENGTH_SHORT).show()
                 mFile?.delete()
                 isRecording = false
                 false
@@ -44,7 +44,7 @@ class PhoneRecordManager(private val number: String) {
     }
 
     fun stopRecord() {
-        ThreadManager.execute {
+        ThreadManager.execute(Runnable {
             getMediaRecorder()?.also {
                 try {
                     it.stop()
@@ -61,7 +61,7 @@ class PhoneRecordManager(private val number: String) {
                     isRecording = false
                 }
             }
-        }
+        })
     }
 
     private fun tryDefaultWayRecord() {

@@ -9,6 +9,9 @@ import com.maiya.call.phone.utils.PhoneCallUtil
 import com.maiya.call.phone.view.ForegroundActivity
 import java.lang.Exception
 
+/**
+ * 电话实现类
+ */
 
 class IPhoneCallListenerImpl : IPhoneCallListener {
 

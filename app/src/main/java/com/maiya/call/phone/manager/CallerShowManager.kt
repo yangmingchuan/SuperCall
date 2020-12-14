@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import com.maiya.call.phone.service.CallListenerService
+import com.maiya.call.phone.service.TaskServiceManager
 
 /**
  * 电话显示管理
@@ -20,8 +21,10 @@ class CallerShowManager private constructor() {
 
     fun initCallerShow(context: Context?) {
         try {
-            ContextCompat.startForegroundService(context!!, Intent(context, CallListenerService::class.java))
-            FloatingWindowManager.instance.initManager(context)
+            context?.let {
+                TaskServiceManager.bindStepService(Intent(it, CallListenerService::class.java))
+                FloatingWindowManager.instance.initManager(it)
+            }
         } catch (e: Exception) {
         }
     }

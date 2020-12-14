@@ -31,7 +31,7 @@ object LogUtils {
 
     @JvmStatic
     @JvmOverloads
-    fun init(logLevel: LogLevel, preTag: String = "xiaosw-") {
+    fun init(logLevel: LogLevel, preTag: String = "ymc-") {
         mLogLevel = logLevel
         mPreTag = preTag
     }

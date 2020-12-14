@@ -34,6 +34,19 @@
         />
 
     <TextView
+        android:id="@+id/bt_set_sys_caller"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="设置为默认电话应用"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@+id/tv_set_ring"
+        />
+
+    <TextView
         android:id="@+id/bt3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,7 +56,7 @@
         android:padding="10dp"
         android:textSize="18sp"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@+id/tv_set_ring"
+        app:layout_constraintTop_toBottomOf="@+id/bt_set_sys_caller"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

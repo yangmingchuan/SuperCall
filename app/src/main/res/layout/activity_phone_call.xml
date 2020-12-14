@@ -126,7 +126,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="tv_show_caller_keyboard, tv_add_call, cb_hold
-        , cb_recording, cb_speaker, cb_mute" />
+        , cb_recording, cb_speaker, cb_mute ,layout_video_container" />
 
     <TextView
         android:id="@+id/tv_key_input_content"
@@ -200,5 +200,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/layout_video_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

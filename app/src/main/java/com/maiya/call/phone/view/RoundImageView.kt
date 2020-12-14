@@ -2,22 +2,21 @@ package com.maiya.call.phone.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Path
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.widget.ImageView
 import com.maiya.call.R
 
 /**
- * @ClassName: [RoundImageView]
- * @Description:
- *
- * Created by admin at 2020-05-08
- * @Email xiaosw0802@163.com
+ * 圆角 iv
  */
+
 @SuppressLint("AppCompatCustomView")
-class RoundImageView @JvmOverloads constructor (
+class RoundImageView @JvmOverloads constructor(
         ctx: Context, attrs: AttributeSet? = null
-) : ImageView(ctx, attrs){
+) : ImageView(ctx, attrs) {
 
     private var mClipPath = Path()
     private var mRadiusRectF = RectF()

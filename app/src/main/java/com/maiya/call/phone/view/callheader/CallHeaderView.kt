@@ -11,7 +11,6 @@ import androidx.annotation.RequiresApi
 import com.maiya.call.R
 import com.maiya.call.phone.interfaces.IPhoneCallInterface
 import com.maiya.call.phone.manager.PhoneCallManager
-import com.maiya.call.phone.presenter.CallHeaderPresenter
 
 import com.maiya.call.phone.utils.ContactUtil
 import com.maiya.call.phone.utils.imageload.GlideImageLoader
@@ -19,16 +18,13 @@ import com.maiya.call.util.LogUtils
 import kotlinx.android.synthetic.main.view_caller_header.view.*
 
 /**
- * @ClassName: [CallHeaderView]
- * @Description:
- *
- * Created by admin at 2020-07-08
- * @Email xiaosw0802@163.com
+ * 通话头部组合类
  */
+
 @RequiresApi(Build.VERSION_CODES.M)
 class CallHeaderView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr) , CallHeaderContract.View {
+) : LinearLayout(context, attrs, defStyleAttr), CallHeaderContract.View {
 
     private val INCOME_TEXT = "来电"
 
@@ -114,12 +110,12 @@ class CallHeaderView @JvmOverloads constructor(
 
     override fun onQueryLocalContactInfoSuccessful(info: ContactUtil.ContactInfo?) {
         info?.let {
-            if (it.displayName !=null) {
+            if (it.displayName != null) {
                 tv_call_number.text = it.displayName
             }
 
-            if (it.photoUri !=null) {
-                GlideImageLoader.displayImage( it.photoUri,iv_account_head)
+            if (it.photoUri != null) {
+                GlideImageLoader.displayImage(it.photoUri, iv_account_head)
             }
             return
         }
@@ -127,7 +123,7 @@ class CallHeaderView @JvmOverloads constructor(
     }
 
     override fun onQueryPhoneInfoSuccessful(city: String?, type: String?) {
-        if (city ==null && type == null) {
+        if (city == null && type == null) {
             tv_call_number_info.visibility = View.GONE
             return
         }
