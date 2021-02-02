@@ -2,10 +2,10 @@ package com.maiya.call.phone.manager
 
 import android.content.Context
 import android.os.Looper
+import com.maiya.call.phone.utils.AppHandlerUtil
 import com.maiya.call.phone.utils.ContactUtil
 import com.maiya.call.phone.utils.ContactUtil.getContentCallLog
 import com.maiya.call.phone.utils.ThreadManager.execute
-import com.ymc.ijkplay.utils.AppHandlerUtil
 
 object ContactManager {
     fun getContentCallLog(mContext: Context?, number: String?, callBack: Callback?) {

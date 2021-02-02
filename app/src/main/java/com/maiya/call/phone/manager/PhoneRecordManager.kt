@@ -3,9 +3,9 @@ package com.maiya.call.phone.manager
 import android.media.MediaRecorder
 import android.widget.Toast
 import com.maiya.call.App
+import com.maiya.call.phone.utils.AppHandlerUtil
 import com.maiya.call.phone.utils.ThreadManager
 import com.maiya.call.util.file.FileUtils
-import com.ymc.ijkplay.utils.AppHandlerUtil
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -52,9 +52,9 @@ class PhoneRecordManager(private val number: String) {
                     it.release()
                     destroyMediaRecorder()
                     isRecording = false
-                    AppHandlerUtil.runInUiThread {
+                    AppHandlerUtil.runInUiThread(Runnable {
                         Toast.makeText(App.context, "\"录音文件保存在${mFile?.parent}目录下\"", Toast.LENGTH_SHORT).show()
-                    }
+                    })
                 } catch (e: Exception) {
                     getMediaRecorder()?.release()
                     destroyMediaRecorder()

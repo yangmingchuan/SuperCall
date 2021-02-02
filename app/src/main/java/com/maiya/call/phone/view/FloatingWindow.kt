@@ -16,8 +16,6 @@ import com.maiya.call.phone.utils.ContactUtil
 import com.maiya.call.phone.utils.MobileNumberUtils
 import com.maiya.call.phone.utils.PhoneUtil
 import com.maiya.call.util.LogUtils
-import com.ymc.ijkplay.IRenderView
-import com.ymc.ijkplay.IjkVideoView
 import tv.danmaku.ijk.media.player.IMediaPlayer
 import java.util.*
 
@@ -27,7 +25,7 @@ import java.util.*
  * Class  : FloatingWindow
  */
 
-class FloatingWindow(context: Context?, videoLink: String?, callListener: IPhoneCallListener?) : IMediaPlayer.OnCompletionListener {
+class FloatingWindow(context: Context?, videoLink: String?, callListener: IPhoneCallListener?) {
 
     private lateinit var windowManager: WindowManager
     private lateinit var params: WindowManager.LayoutParams
@@ -42,8 +40,6 @@ class FloatingWindow(context: Context?, videoLink: String?, callListener: IPhone
     private lateinit var tvPhonePickUp: TextView
     private lateinit var tvCallRemark: TextView
     private var tvCallingTime: TextView? = null
-    private lateinit var mVideoContainer: FrameLayout
-    private var ijkVideoView: IjkVideoView? = null
 
     // 电话状态判断
     private var hasShown = false
@@ -101,15 +97,8 @@ class FloatingWindow(context: Context?, videoLink: String?, callListener: IPhone
         tvPhoneHangUp = phoneCallView.findViewById(R.id.tv_phone_hang_up)
         tvPhonePickUp = phoneCallView.findViewById(R.id.tv_phone_pick_up)
         tvCallingTime = phoneCallView.findViewById(R.id.tv_phone_calling_time)
-        mVideoContainer = phoneCallView.findViewById(R.id.layout_video_container)
         tvCallRemark = phoneCallView.findViewById(R.id.tv_call_remark)
 
-        //视频初始化 并默认填充 fill 模式
-        ijkVideoView = IjkVideoView(mContext, IRenderView.AR_ASPECT_FILL_PARENT)
-        ijkVideoView?.setOnCompletionListener(this)
-        mVideoContainer.addView(ijkVideoView)
-        val uri = Uri.parse("cache:$mVideoLink")
-        ijkVideoView?.setVideoURI(uri)
 
     }
 
@@ -117,8 +106,6 @@ class FloatingWindow(context: Context?, videoLink: String?, callListener: IPhone
         //接听电话
         tvPhonePickUp.setOnClickListener {
             mCallListener?.onAnswer()
-            //接听电话改变视频声音
-            ijkVideoView?.setVolume(0f, 0f)
             tvPhonePickUp.visibility = View.GONE
             tvCallingTime?.visibility = View.VISIBLE
             startTimer()
@@ -158,7 +145,6 @@ class FloatingWindow(context: Context?, videoLink: String?, callListener: IPhone
                         //RingManager.setMuteRing()
                         tvPhonePickUp.visibility = if (callIn) View.VISIBLE else View.GONE
                         windowManager.addView(phoneCallView, params)
-                        ijkVideoView?.start()
                         hasShown = true
                     }
                 }
@@ -176,7 +162,6 @@ class FloatingWindow(context: Context?, videoLink: String?, callListener: IPhone
             if (hasShown) {
                 if (phoneCallView.parent != null) {
                     //RingManager.resetRingVolume()
-                    ijkVideoView?.stopPlayback()
                     windowManager.removeView(phoneCallView)
                     isCallingIn = false
                     hasShown = false
@@ -201,12 +186,6 @@ class FloatingWindow(context: Context?, videoLink: String?, callListener: IPhone
             val com = MobileNumberUtils.getCarrier(mContext, phoneNumber, 86)
             tvCallRemark.text = "$city $com"
         }
-    }
-
-
-    override fun onCompletion(p0: IMediaPlayer?) {
-        ijkVideoView?.start()
-        ijkVideoView?.keepScreenOn = true
     }
 
 
