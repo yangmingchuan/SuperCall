@@ -88,7 +88,8 @@ class PhoneActivity : AppCompatActivity() {
                 val content: String = it.updateRingPerContent()
                 if (TextUtils.isEmpty(content)) {
                     it.dismiss()
-                    downloadFile(FloatingWindowManager.instance.mp4Url)
+                    // 暂时关闭 保存到本地功能，统一走ijk Video cache逻辑
+//                    downloadFile(FloatingWindowManager.instance.mp4Url)
                 }
             }
         }
