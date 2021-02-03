@@ -78,12 +78,13 @@
             <intent-filter android:priority="2147483647">
                 <action android:name="com.cootek.smartdialer.action.INCOMING_CALL" />
             </intent-filter>
-        </receiver> <!-- 电话service -->
+        </receiver>
         <receiver android:name=".phone.receiver.NotificationBroadcast">
             <intent-filter>
                 <action android:name="com.ACTION_NOTIFICATION_CLICK" />
             </intent-filter>
-        </receiver> <!-- 电话状态接收广播 -->
+        </receiver>
+        <!-- 开机广播 -->
         <receiver android:name=".phone.receiver.AutoStartReceiver">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.RECEIVE_BOOT_COMPLETED" />
@@ -91,6 +92,7 @@
                 <action android:name="jenly.autostart_action" />
             </intent-filter>
         </receiver>
+        <!-- 电话service -->
         <service
             android:name=".phone.service.PhoneCallService"
             android:permission="android.permission.BIND_INCALL_SERVICE">
@@ -101,7 +103,8 @@
             <meta-data
                 android:name="android.telecom.IN_CALL_SERVICE_UI"
                 android:value="true" />
-        </service> <!-- 开机广播 -->
+        </service>
+        <!-- 电话状态接收广播 -->
         <service
             android:name=".phone.service.CallListenerService"
             android:enabled="true"

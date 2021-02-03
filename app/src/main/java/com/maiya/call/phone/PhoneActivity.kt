@@ -88,6 +88,7 @@ class PhoneActivity : AppCompatActivity() {
                 val content: String = it.updateRingPerContent()
                 if (TextUtils.isEmpty(content)) {
                     it.dismiss()
+                    Toast.makeText(applicationContext,"设置来电秀成功",Toast.LENGTH_SHORT).show()
                     // 暂时关闭 保存到本地功能，统一走ijk Video cache逻辑
 //                    downloadFile(FloatingWindowManager.instance.mp4Url)
                 }
