@@ -18,6 +18,10 @@
 >V1.1.0 适配电话接听及挂断
 >V1.0.0 使用悬浮窗简单实现Android 9.0版本第三方电话应用
 
+## 效果图
+
+![WechatIMG39.jpeg](https://upload-images.jianshu.io/upload_images/6188347-f7356545da353b79.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/300)
+
 ## 感谢
 
 [来电秀实现](https://ljd1996.github.io/2019/12/20/Android%E6%9D%A5%E7%94%B5%E7%A7%80%E5%AE%9E%E8%B7%B5/)
