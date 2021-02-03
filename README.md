@@ -20,7 +20,7 @@
 
 ## 效果图
 
-！[](https://upload-images.jianshu.io/upload_images/6188347-f7356545da353b79.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/300)
+![](https://upload-images.jianshu.io/upload_images/6188347-f7356545da353b79.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/300)
 
 ## 感谢
 
