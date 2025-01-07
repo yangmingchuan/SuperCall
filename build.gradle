@@ -5,7 +5,13 @@ buildscript {
 
     repositories {
         google()
+        mavenCentral()
+        // 如果项目依赖内容托管在 jCenter
         jcenter()
+        // 或额外指定需要的仓库
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.aliyun.com/repository/public' } // 国内镜像
+        maven { url 'https://maven.google.com' } // Google Maven 仓库
         
     }
     dependencies {
@@ -21,8 +27,11 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
-        
+        mavenCentral()
+        jcenter() // 虽然停止维护，有些依赖可能还需要
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.aliyun.com/repository/public' } // 国内镜像
+        maven { url 'https://maven.google.com' } // Google Maven 仓库
     }
 }
 
